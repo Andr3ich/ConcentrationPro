@@ -1,12 +1,88 @@
 ﻿<Window x:Class="ConcentrationTracker.MainWindow"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:ConcentrationTracker"
-        mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
-        
+        xmlns:controls="clr-namespace:ConcentrationTracker.MVVM.View.Controls"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Title="ConcentrationPro" Height="600" Width="1000" Background="#F5F6FA">
+    <Grid Margin="40">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <!-- Header -->
+            <RowDefinition Height="30"/>
+            <!-- Spacing -->
+            <RowDefinition Height="Auto"/>
+            <!-- KPI cards -->
+            <RowDefinition Height="30"/>
+            <!-- Spacing -->
+            <RowDefinition Height="*"/>
+            <!-- Main content -->
+        </Grid.RowDefinitions>
+        <!-- HEADER -->
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <StackPanel>
+                <TextBlock Text="ConcentrationPro" FontSize="24" FontWeight="Bold" Foreground="{StaticResource TextPrimary}"/>
+                <TextBlock Text="Window Switching Analysis" FontSize="14" Foreground="{StaticResource TextSecondary}"/>
+            </StackPanel>
+            <StackPanel Grid.Column="1" HorizontalAlignment="Right">
+                <TextBlock Text="Session Time" FontSize="12" Foreground="{StaticResource TextSecondary}"/>
+                <TextBlock Text="00:00:09" FontSize="16" FontWeight="Bold" Foreground="{StaticResource TextPrimary}"/>
+            </StackPanel>
+        </Grid>
+        <!-- KPI CARDS -->
+        <UniformGrid Grid.Row="2" Columns="4">
+
+            <controls:KpiCard Title="Total Switches"
+                      Value="{Binding TotalSwitches}"/>
+
+            <controls:KpiCard Title="Avg Switches/Hour"
+                      Value="{Binding AvgSwitchesPerHour}"/>
+
+            <controls:KpiCard Title="Focus Streak"
+                      Value="{Binding FocusStreak}"/>
+
+            <controls:KpiCard Title="Productive Time"
+                      Value="{Binding ProductiveTime}"/>
+
+        </UniformGrid>
+        <!-- MAIN CONTENT -->
+        <Grid Grid.Row="4">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="300"/>
+                <ColumnDefinition Width="30"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <!-- LEFT PANEL -->
+            <Border Grid.Column="0" Style="{StaticResource CardStyle}">
+                <StackPanel VerticalAlignment="Center">
+                    <TextBlock Text="Concentration Score"
+               FontSize="16"
+               FontWeight="SemiBold"
+               Foreground="{StaticResource TextSecondary}"
+               HorizontalAlignment="Center"
+               Margin="0,0,0,20"/>
+                    <TextBlock Text="{Binding ProductiveTime}"
+               FontSize="48"
+               FontWeight="Bold"
+               Foreground="{StaticResource AccentBlue}"
+               HorizontalAlignment="Center"/>
+                    <TextBlock Text="Based on window switching behavior"
+               FontSize="13"
+               Foreground="{StaticResource TextSecondary}"
+               HorizontalAlignment="Center"
+               Margin="0,10,0,0"/>
+                    <Button Content="Simulate Switch"
+            Margin="0,30,0,0"
+            Height="40"
+            Width="160"
+            HorizontalAlignment="Center"
+            Command="{Binding IncreaseSwitchesCommand}"/>
+                </StackPanel>
+            </Border>
+            <!-- RIGHT PANEL -->
+            <Border Grid.Column="2" Style="{StaticResource CardStyle}">
+                <TextBlock Text="Charts Area" FontSize="18" Foreground="{StaticResource TextSecondary}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            </Border>
+        </Grid>
     </Grid>
 </Window>
