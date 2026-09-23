@@ -1,3 +1,4 @@
+using ConcentrationTracker.Core.Services;
 using ConcentrationTracker.MVVM.Model;
 
 namespace ConcentrationTracker.MVVM.Model
@@ -20,7 +21,7 @@ namespace ConcentrationTracker.MVVM.Model
             get
             {
                 if (!HasValue)
-                    return "None";
+                    return LocalizationService.GetString("Common_None");
 
                 if (string.IsNullOrWhiteSpace(DurationText))
                     return AppName;
@@ -34,7 +35,7 @@ namespace ConcentrationTracker.MVVM.Model
             return new SummaryAppMetricModel
             {
                 Title = title,
-                AppName = "None",
+                AppName = LocalizationService.GetString("Common_None"),
                 WindowTitle = string.Empty,
                 DurationText = string.Empty,
                 ProcessPath = string.Empty,

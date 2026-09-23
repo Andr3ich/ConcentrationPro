@@ -302,13 +302,12 @@
                                     <ColumnDefinition Width="Auto"/>
                                     <ColumnDefinition Width="12"/>
                                     <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
                                 <Border Width="34" Height="34" CornerRadius="11" Background="{DynamicResource KpiPurpleSoftBrush}">
                                     <iconPacks:PackIconMaterial Kind="SwapHorizontal" Width="16" Height="16" Foreground="{DynamicResource KpiPurpleBrush}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                 </Border>
-                                <TextBlock Grid.Column="2" Text="{DynamicResource Summary_Interruptions}" FontSize="13" Foreground="{DynamicResource TextSecondaryBrush}" VerticalAlignment="Center"/>
-                                <TextBlock Grid.Column="3" Text="{Binding DisruptiveSwitches, Mode=OneWay}" FontSize="15" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" VerticalAlignment="Center"/>
+                                <TextBlock Grid.Column="2" Text="{DynamicResource Summary_Interruptions}" FontSize="12" Foreground="{DynamicResource TextSecondaryBrush}" VerticalAlignment="Top"/>
+                                <TextBlock Grid.Column="2" Text="{Binding DisruptiveSwitches, Mode=OneWay}" FontSize="13" FontWeight="Bold" Margin="0,18,0,0" Foreground="{DynamicResource TextPrimaryBrush}" TextTrimming="CharacterEllipsis"/>
                             </Grid>
                         </Border>
 

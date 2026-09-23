@@ -1771,18 +1771,11 @@ namespace ConcentrationTracker.MVVM.ViewModel
                 return false;
 
             string appName = activeWindow.AppName ?? string.Empty;
-            string windowTitle = activeWindow.WindowTitle ?? string.Empty;
 
             if (appName.Equals(_ownProcessName, StringComparison.OrdinalIgnoreCase))
                 return true;
 
             if (appName.IndexOf("ConcentrationTracker", StringComparison.OrdinalIgnoreCase) >= 0)
-                return true;
-
-            if (windowTitle.IndexOf("ConcentrationPro", StringComparison.OrdinalIgnoreCase) >= 0)
-                return true;
-
-            if (windowTitle.IndexOf("ConcentrationTracker", StringComparison.OrdinalIgnoreCase) >= 0)
                 return true;
 
             return false;
@@ -2092,7 +2085,7 @@ namespace ConcentrationTracker.MVVM.ViewModel
             if (activityEvent.IsActive)
                 return true;
 
-            if (activityEvent.CurrentDuration.TotalSeconds < 2)
+            if (activityEvent.CurrentDuration.TotalSeconds < 0.5)
                 return false;
 
             return true;
