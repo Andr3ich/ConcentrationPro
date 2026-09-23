@@ -1,0 +1,754 @@
+<UserControl x:Class="ConcentrationTracker.MVVM.View.Controls.AppCategoryRulesPanel"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:converters="clr-namespace:ConcentrationTracker.Core.Converters"
+             xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks">
+
+    <UserControl.Resources>
+
+        <converters:CategoryDisplayNameConverter x:Key="CategoryDisplayNameConverter"/>
+
+        <Style x:Key="CategoryPanelButtonStyle"
+               TargetType="Button"
+               BasedOn="{StaticResource AppSecondaryButtonStyle}">
+            <Setter Property="Height" Value="44"/>
+            <Setter Property="Padding" Value="14,0"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="MinWidth" Value="0"/>
+        </Style>
+
+        <Style x:Key="CategoryPanelPrimaryButtonStyle"
+               TargetType="Button"
+               BasedOn="{StaticResource AppPrimaryButtonStyle}">
+            <Setter Property="Height" Value="42"/>
+            <Setter Property="Padding" Value="16,0"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+        </Style>
+
+        <Style x:Key="CategoryLabelStyle"
+               TargetType="TextBlock">
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
+            <Setter Property="Margin" Value="0,0,0,7"/>
+        </Style>
+
+        <Style x:Key="CategoryTextBoxStyle"
+               TargetType="TextBox">
+            <Setter Property="Height" Value="42"/>
+            <Setter Property="Padding" Value="13,0"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+            <Setter Property="Background" Value="{DynamicResource SurfaceBrush}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CaretBrush" Value="{DynamicResource TextPrimaryBrush}"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TextBox">
+                        <Border x:Name="RootBorder"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="13">
+                            <ScrollViewer x:Name="PART_ContentHost"
+                                          Margin="{TemplateBinding Padding}"
+                                          VerticalAlignment="Center"/>
+                        </Border>
+
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="RootBorder"
+                                        Property="BorderBrush"
+                                        Value="{DynamicResource AccentBrush}"/>
+                            </Trigger>
+                            <Trigger Property="IsKeyboardFocused" Value="True">
+                                <Setter TargetName="RootBorder"
+                                        Property="BorderBrush"
+                                        Value="{DynamicResource AccentBrush}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="CategoryComboBoxStyle"
+               TargetType="ComboBox">
+            <Setter Property="Height" Value="42"/>
+            <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+            <Setter Property="Background" Value="{DynamicResource SurfaceBrush}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="SnapsToDevicePixels" Value="True"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ComboBox">
+
+                        <Grid SnapsToDevicePixels="True">
+
+                            <Border x:Name="RootBorder"
+                                    Background="{TemplateBinding Background}"
+                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                    BorderThickness="{TemplateBinding BorderThickness}"
+                                    CornerRadius="13"/>
+
+                            <ContentPresenter x:Name="ContentSite"
+                                              Margin="14,0,34,0"
+                                              IsHitTestVisible="False"
+                                              HorizontalAlignment="Stretch"
+                                              VerticalAlignment="Center"
+                                              Content="{TemplateBinding SelectionBoxItem}"
+                                              ContentTemplate="{TemplateBinding ItemTemplate}"
+                                              ContentStringFormat="{TemplateBinding SelectionBoxItemStringFormat}"
+                                              RecognizesAccessKey="True"/>
+
+                            <Path Data="M 0 0 L 4 4 L 8 0 Z"
+                                  Width="8"
+                                  Height="4"
+                                  Fill="{DynamicResource TextSecondaryBrush}"
+                                  HorizontalAlignment="Right"
+                                  VerticalAlignment="Center"
+                                  Margin="0,0,14,0"/>
+
+                            <ToggleButton Focusable="False"
+                                          Background="Transparent"
+                                          BorderThickness="0"
+                                          IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
+                                          ClickMode="Press">
+                                <ToggleButton.Template>
+                                    <ControlTemplate TargetType="ToggleButton">
+                                        <Border Background="Transparent"/>
+                                    </ControlTemplate>
+                                </ToggleButton.Template>
+                            </ToggleButton>
+
+                            <Popup x:Name="PART_Popup"
+                                   Placement="Bottom"
+                                   AllowsTransparency="True"
+                                   Focusable="False"
+                                   IsOpen="{TemplateBinding IsDropDownOpen}"
+                                   PopupAnimation="Fade">
+
+                                <Border Background="{DynamicResource SurfaceBrush}"
+                                        BorderBrush="{DynamicResource BorderBrush}"
+                                        BorderThickness="1"
+                                        CornerRadius="13"
+                                        Width="{Binding ActualWidth, RelativeSource={RelativeSource TemplatedParent}}"
+                                        MaxHeight="{TemplateBinding MaxDropDownHeight}"
+                                        Padding="4">
+
+                                    <ScrollViewer>
+                                        <ItemsPresenter/>
+                                    </ScrollViewer>
+
+                                </Border>
+
+                            </Popup>
+
+                        </Grid>
+
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="RootBorder"
+                                        Property="BorderBrush"
+                                        Value="{DynamicResource AccentBrush}"/>
+                            </Trigger>
+                            <Trigger Property="IsKeyboardFocusWithin" Value="True">
+                                <Setter TargetName="RootBorder"
+                                        Property="BorderBrush"
+                                        Value="{DynamicResource AccentBrush}"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="RootBorder"
+                                        Property="Opacity"
+                                        Value="0.55"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style TargetType="ComboBoxItem">
+            <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+            <Setter Property="Background" Value="{DynamicResource SurfaceBrush}"/>
+            <Setter Property="Padding" Value="12,9"/>
+            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ComboBoxItem">
+                        <Border x:Name="ItemBorder"
+                                Background="{TemplateBinding Background}"
+                                CornerRadius="9"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter/>
+                        </Border>
+
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsHighlighted" Value="True">
+                                <Setter TargetName="ItemBorder"
+                                        Property="Background"
+                                        Value="{DynamicResource AccentUltraSoftBrush}"/>
+                            </Trigger>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter TargetName="ItemBorder"
+                                        Property="Background"
+                                        Value="{DynamicResource AccentUltraSoftBrush}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="RuleRowStyle"
+               TargetType="Border">
+            <Setter Property="BorderBrush" Value="{DynamicResource BorderSoftBrush}"/>
+            <Setter Property="BorderThickness" Value="0,0,0,1"/>
+            <Setter Property="Padding" Value="2,12"/>
+        </Style>
+
+        <Style x:Key="RuleCategoryDotStyle"
+               TargetType="Ellipse">
+            <Setter Property="Fill" Value="{DynamicResource NeutralBrush}"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Category}" Value="Productive">
+                    <Setter Property="Fill" Value="{DynamicResource ProductiveBrush}"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Category}" Value="Communication">
+                    <Setter Property="Fill" Value="{DynamicResource CommunicationBrush}"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Category}" Value="Distraction">
+                    <Setter Property="Fill" Value="{DynamicResource DistractionBrush}"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="RuleDeleteButtonStyle"
+               TargetType="Button">
+            <Setter Property="Width" Value="34"/>
+            <Setter Property="Height" Value="34"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="RootBorder"
+                                Background="{TemplateBinding Background}"
+                                CornerRadius="10">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"/>
+                        </Border>
+
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="RootBorder"
+                                        Property="Background"
+                                        Value="{DynamicResource ErrorSoftBrush}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+    </UserControl.Resources>
+
+    <Grid>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="16"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="18"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0">
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="14"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Border Width="50"
+                    Height="50"
+                    CornerRadius="16"
+                    Background="{DynamicResource AccentUltraSoftBrush}"
+                    BorderBrush="{DynamicResource BorderSoftBrush}"
+                    BorderThickness="1">
+
+                <iconPacks:PackIconMaterial Kind="TagMultipleOutline"
+                                            Width="24"
+                                            Height="24"
+                                            Foreground="{DynamicResource AccentBrush}"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"/>
+
+            </Border>
+
+            <StackPanel Grid.Column="2"
+                        VerticalAlignment="Center">
+
+                <TextBlock Text="{DynamicResource Categories_Title}"
+                           FontSize="{StaticResource FontSizeTitle}"
+                           FontWeight="Bold"
+                           Foreground="{DynamicResource TextPrimaryBrush}"/>
+
+                <TextBlock Text="{DynamicResource Categories_Subtitle}"
+                           FontSize="13"
+                           Margin="0,5,0,0"
+                           Foreground="{DynamicResource TextSecondaryBrush}"/>
+
+            </StackPanel>
+
+        </Grid>
+
+        <Border Grid.Row="2"
+                Background="{DynamicResource SurfaceBrush}"
+                BorderBrush="{DynamicResource BorderSoftBrush}"
+                BorderThickness="1"
+                CornerRadius="20"
+                Padding="18">
+
+            <StackPanel>
+
+                <Grid>
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="12"/>
+                        <ColumnDefinition Width="1.15*"/>
+                        <ColumnDefinition Width="12"/>
+                        <ColumnDefinition Width="180"/>
+                        <ColumnDefinition Width="12"/>
+                        <ColumnDefinition Width="112"/>
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel Grid.Column="0">
+                        <TextBlock Text="{DynamicResource Categories_AppProcess}"
+                                   Style="{StaticResource CategoryLabelStyle}"/>
+                        <TextBox Style="{StaticResource CategoryTextBoxStyle}"
+                                 Height="38"
+                                 Text="{Binding NewRuleAppPattern, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                 ToolTip="{DynamicResource Categories_AppPatternTooltip}"/>
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="2">
+                        <TextBlock Text="{DynamicResource Categories_WindowTitlePattern}"
+                                   Style="{StaticResource CategoryLabelStyle}"/>
+                        <TextBox Style="{StaticResource CategoryTextBoxStyle}"
+                                 Height="38"
+                                 Text="{Binding NewRuleTitlePattern, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                 ToolTip="{DynamicResource Categories_TitlePatternTooltip}"/>
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="4">
+                        <TextBlock Text="{DynamicResource Common_Category}"
+                                   Style="{StaticResource CategoryLabelStyle}"/>
+                        <ComboBox Style="{StaticResource CategoryComboBoxStyle}"
+                                  Height="38"
+                                  ItemsSource="{Binding AvailableCategories}"
+                                  SelectedItem="{Binding NewRuleCategory, Mode=TwoWay}">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Converter={StaticResource CategoryDisplayNameConverter}}"/>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+                    </StackPanel>
+
+                    <Button Grid.Column="6"
+                            Style="{StaticResource CategoryPanelPrimaryButtonStyle}"
+                            Command="{Binding AddCategoryRuleCommand}"
+                            Height="38"
+                            VerticalAlignment="Bottom"
+                            HorizontalAlignment="Stretch">
+                        <StackPanel Orientation="Horizontal"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center">
+                            <iconPacks:PackIconMaterial Kind="Plus"
+                                                        Width="15"
+                                                        Height="15"
+                                                        Margin="0,0,7,0"
+                                                        Foreground="{DynamicResource TextOnAccentBrush}"
+                                                        VerticalAlignment="Center"/>
+                            <TextBlock Text="{DynamicResource Common_Add}"/>
+                        </StackPanel>
+                    </Button>
+
+                </Grid>
+
+                <Border BorderBrush="{DynamicResource BorderSoftBrush}"
+                        BorderThickness="0,0,0,1"
+                        Margin="0,16,0,14"/>
+
+                <Grid>
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="12"/>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="10"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="6"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="6"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="6"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="6"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Text="{DynamicResource Categories_QuickClassify}"
+                               FontSize="13"
+                               FontWeight="SemiBold"
+                               Foreground="{DynamicResource TextPrimaryBrush}"
+                               VerticalAlignment="Center"/>
+
+                    <Border Grid.Column="2"
+                            Background="{DynamicResource SurfaceSoftBrush}"
+                            BorderBrush="{DynamicResource BorderSoftBrush}"
+                            BorderThickness="1"
+                            CornerRadius="10"
+                            Padding="10,7">
+                        <TextBlock Text="{Binding QuickClassifySourceText}"
+                                   FontSize="12"
+                                   Foreground="{DynamicResource TextSecondaryBrush}"
+                                   TextTrimming="CharacterEllipsis"/>
+                    </Border>
+
+                    <Button Grid.Column="4"
+                            Style="{StaticResource CategoryPanelButtonStyle}"
+                            Height="32"
+                            Width="86"
+                            Command="{Binding UseCurrentActivityForRuleCommand}">
+                        <TextBlock Text="{DynamicResource Common_Use}" HorizontalAlignment="Center"/>
+                    </Button>
+
+                    <Button Grid.Column="6"
+                            Style="{StaticResource CategoryPanelButtonStyle}"
+                            Height="32"
+                            Width="96"
+                            Command="{Binding SetCurrentActivityCategoryCommand}"
+                            CommandParameter="Productive">
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                            <Ellipse Width="7" Height="7" Fill="{DynamicResource ProductiveBrush}" Margin="0,0,6,0"/>
+                            <TextBlock Text="{DynamicResource Category_Work}"/>
+                        </StackPanel>
+                    </Button>
+
+                    <Button Grid.Column="8"
+                            Style="{StaticResource CategoryPanelButtonStyle}"
+                            Height="32"
+                            Width="96"
+                            Command="{Binding SetCurrentActivityCategoryCommand}"
+                            CommandParameter="Neutral">
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                            <Ellipse Width="7" Height="7" Fill="{DynamicResource NeutralBrush}" Margin="0,0,6,0"/>
+                            <TextBlock Text="{DynamicResource Category_Neutral}"/>
+                        </StackPanel>
+                    </Button>
+
+                    <Button Grid.Column="10"
+                            Style="{StaticResource CategoryPanelButtonStyle}"
+                            Height="32"
+                            Width="96"
+                            Command="{Binding SetCurrentActivityCategoryCommand}"
+                            CommandParameter="Communication">
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                            <Ellipse Width="7" Height="7" Fill="{DynamicResource CommunicationBrush}" Margin="0,0,6,0"/>
+                            <TextBlock Text="{DynamicResource Category_CommsShort}"/>
+                        </StackPanel>
+                    </Button>
+
+                    <Button Grid.Column="12"
+                            Style="{StaticResource CategoryPanelButtonStyle}"
+                            Height="32"
+                            Width="96"
+                            Command="{Binding SetCurrentActivityCategoryCommand}"
+                            CommandParameter="Distraction">
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                            <Ellipse Width="7" Height="7" Fill="{DynamicResource DistractionBrush}" Margin="0,0,6,0"/>
+                            <TextBlock Text="{DynamicResource Category_DistractShort}"/>
+                        </StackPanel>
+                    </Button>
+
+                </Grid>
+
+            </StackPanel>
+
+        </Border>
+
+        <Border Grid.Row="4"
+                Background="{DynamicResource SurfaceBrush}"
+                BorderBrush="{DynamicResource BorderSoftBrush}"
+                BorderThickness="1"
+                CornerRadius="22"
+                Padding="20">
+
+            <Grid>
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="14"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="10"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="12"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <Grid Grid.Row="0">
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel Orientation="Horizontal"
+                                VerticalAlignment="Center">
+
+                        <iconPacks:PackIconMaterial Kind="FormatListBulleted"
+                                                    Width="21"
+                                                    Height="21"
+                                                    Foreground="{DynamicResource AccentBrush}"
+                                                    VerticalAlignment="Center"
+                                                    Margin="0,0,10,0"/>
+
+                        <StackPanel>
+
+                            <TextBlock Text="{DynamicResource Categories_RulesTitle}"
+                                       FontSize="19"
+                                       FontWeight="Bold"
+                                       Foreground="{DynamicResource TextPrimaryBrush}"/>
+
+                            <TextBlock Text="{DynamicResource Categories_RulesDescription}"
+                                       FontSize="12"
+                                       Margin="0,4,0,0"
+                                       Foreground="{DynamicResource TextSecondaryBrush}"/>
+
+                        </StackPanel>
+
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="1"
+                                Orientation="Horizontal"
+                                HorizontalAlignment="Right"
+                                VerticalAlignment="Center">
+
+                        <Button Style="{StaticResource CategoryPanelButtonStyle}"
+                                Margin="0,0,8,0"
+                                Command="{Binding ReloadCategoryRulesCommand}">
+                            <StackPanel Orientation="Horizontal">
+                                <iconPacks:PackIconMaterial Kind="Refresh"
+                                                            Width="15"
+                                                            Height="15"
+                                                            Margin="0,0,7,0"
+                                                            Foreground="{DynamicResource TextPrimaryBrush}"
+                                                            VerticalAlignment="Center"/>
+                                <TextBlock Text="{DynamicResource Common_Reload}"/>
+                            </StackPanel>
+                        </Button>
+
+                        <Button Style="{StaticResource CategoryPanelPrimaryButtonStyle}"
+                                Command="{Binding SaveCategoryRulesCommand}" Width="85">
+                            <StackPanel Orientation="Horizontal">
+                                <iconPacks:PackIconMaterial Kind="ContentSave"
+                                                            Width="15"
+                                                            Height="15"
+                                                            Margin="0,0,7,0"
+                                                            Foreground="{DynamicResource TextOnAccentBrush}"
+                                                            VerticalAlignment="Center"/>
+                                <TextBlock Text="{DynamicResource Common_Save}"/>
+                            </StackPanel>
+                        </Button>
+
+                    </StackPanel>
+
+                </Grid>
+
+                <Border Grid.Row="2"
+                        BorderBrush="{DynamicResource BorderSoftBrush}"
+                        BorderThickness="0,0,0,1"
+                        Padding="2,0,2,10">
+
+                    <Grid>
+
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="82"/>
+                            <ColumnDefinition Width="1.05*"/>
+                            <ColumnDefinition Width="1.45*"/>
+                            <ColumnDefinition Width="190"/>
+                            <ColumnDefinition Width="116"/>
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Text="{DynamicResource Common_Enabled}"
+                                   FontSize="12"
+                                   FontWeight="Bold"
+                                   Foreground="{DynamicResource TextSecondaryBrush}"
+                                   VerticalAlignment="Center"/>
+
+                        <TextBlock Grid.Column="1"
+                                   Text="{DynamicResource Categories_AppProcess}"
+                                   FontSize="12"
+                                   FontWeight="Bold"
+                                   Foreground="{DynamicResource TextSecondaryBrush}"
+                                   VerticalAlignment="Center"/>
+
+                        <TextBlock Grid.Column="2"
+                                   Text="{DynamicResource Categories_WindowTitlePattern}"
+                                   FontSize="12"
+                                   FontWeight="Bold"
+                                   Foreground="{DynamicResource TextSecondaryBrush}"
+                                   VerticalAlignment="Center"/>
+
+                        <TextBlock Grid.Column="3"
+                                   Text="{DynamicResource Common_Category}"
+                                   FontSize="12"
+                                   FontWeight="Bold"
+                                   Foreground="{DynamicResource TextSecondaryBrush}"
+                                   VerticalAlignment="Center"/>
+
+                        <TextBlock Grid.Column="4"
+                                   Text="{DynamicResource Common_Action}"
+                                   FontSize="12"
+                                   FontWeight="Bold"
+                                   Foreground="{DynamicResource TextSecondaryBrush}"
+                                   VerticalAlignment="Center"/>
+
+                    </Grid>
+
+                </Border>
+
+                <ScrollViewer Grid.Row="4"
+                              VerticalScrollBarVisibility="Auto"
+                              HorizontalScrollBarVisibility="Disabled"
+                              Padding="0,0,4,0">
+
+                    <ItemsControl ItemsSource="{Binding CategoryRules}">
+
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+
+                                <Border Style="{StaticResource RuleRowStyle}">
+
+                                    <Grid>
+
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="82"/>
+                                            <ColumnDefinition Width="1.05*"/>
+                                            <ColumnDefinition Width="1.45*"/>
+                                            <ColumnDefinition Width="190"/>
+                                            <ColumnDefinition Width="116"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <CheckBox IsChecked="{Binding IsEnabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                  HorizontalAlignment="Center"
+                                                  VerticalAlignment="Center"/>
+
+                                        <TextBox Grid.Column="1"
+                                                 Style="{StaticResource CategoryTextBoxStyle}"
+                                                 Height="40"
+                                                 Margin="0,0,12,0"
+                                                 Text="{Binding AppPattern, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+                                        <TextBox Grid.Column="2"
+                                                 Style="{StaticResource CategoryTextBoxStyle}"
+                                                 Height="40"
+                                                 Margin="0,0,12,0"
+                                                 Text="{Binding TitlePattern, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+                                        <Grid Grid.Column="3"
+                                              Margin="0,0,12,0">
+
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="8"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+
+                                            <Ellipse Width="9"
+                                                     Height="9"
+                                                     Style="{StaticResource RuleCategoryDotStyle}"
+                                                     HorizontalAlignment="Center"
+                                                     VerticalAlignment="Center"/>
+
+                                            <ComboBox Grid.Column="2"
+                                                      Style="{StaticResource CategoryComboBoxStyle}"
+                                                      Height="40"
+                                                      ItemsSource="{Binding DataContext.AvailableCategories, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                      SelectedItem="{Binding Category, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                                                <ComboBox.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <TextBlock Text="{Binding Converter={StaticResource CategoryDisplayNameConverter}}"/>
+                                                    </DataTemplate>
+                                                </ComboBox.ItemTemplate>
+                                            </ComboBox>
+
+                                        </Grid>
+
+                                        <Button Grid.Column="4"
+                                                Style="{StaticResource RuleDeleteButtonStyle}"
+                                                ToolTip="{DynamicResource Common_Delete}"
+                                                Command="{Binding DataContext.DeleteCategoryRuleCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                CommandParameter="{Binding}">
+
+                                            <iconPacks:PackIconMaterial Kind="DeleteOutline"
+                                                                        Width="17"
+                                                                        Height="17"
+                                                                        Foreground="{DynamicResource ErrorBrush}"/>
+
+                                        </Button>
+
+                                    </Grid>
+
+                                </Border>
+
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+
+                    </ItemsControl>
+
+                </ScrollViewer>
+
+                <Grid Grid.Row="6">
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="8"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <iconPacks:PackIconMaterial Kind="InformationOutline"
+                                                Width="15"
+                                                Height="15"
+                                                Foreground="{DynamicResource TextSecondaryBrush}"
+                                                VerticalAlignment="Center"/>
+
+                    <TextBlock Grid.Column="2"
+                               Text="{Binding CategoryRulesStatus}"
+                               FontSize="12"
+                               Foreground="{DynamicResource TextSecondaryBrush}"
+                               VerticalAlignment="Center"/>
+
+                </Grid>
+
+            </Grid>
+
+        </Border>
+
+    </Grid>
+
+</UserControl>

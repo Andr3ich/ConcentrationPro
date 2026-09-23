@@ -1,0 +1,720 @@
+<Window x:Class="ConcentrationTracker.MVVM.View.Windows.SessionDetailsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+        xmlns:controls="clr-namespace:ConcentrationTracker.MVVM.View.Controls"
+        xmlns:converters="clr-namespace:ConcentrationTracker.Core.Converters"
+        xmlns:shell="clr-namespace:System.Windows.Shell;assembly=PresentationFramework"
+        Title="{Binding Title}"
+        Width="1460"
+        Height="940"
+        MinWidth="1220"
+        MinHeight="780"
+        WindowStartupLocation="CenterOwner"
+        WindowStyle="None"
+        ResizeMode="CanResize"
+        Background="{DynamicResource BackgroundBrush}">
+
+    <shell:WindowChrome.WindowChrome>
+        <shell:WindowChrome CaptionHeight="0"
+                            ResizeBorderThickness="6"
+                            CornerRadius="0"
+                            GlassFrameThickness="0"
+                            UseAeroCaptionButtons="False"/>
+    </shell:WindowChrome.WindowChrome>
+
+    <Window.Resources>
+
+        <converters:DurationTextLocalizationConverter x:Key="DurationTextLocalizationConverter"/>
+        <converters:CategoryDisplayNameConverter x:Key="CategoryDisplayNameConverter"/>
+        <converters:StatusTextLocalizationConverter x:Key="StatusTextLocalizationConverter"/>
+
+        <Style x:Key="DetailsSectionCardStyle"
+               TargetType="Border">
+            <Setter Property="Background" Value="{DynamicResource SurfaceBrush}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource BorderSoftBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="22"/>
+            <Setter Property="Padding" Value="20"/>
+        </Style>
+
+        <Style x:Key="DetailsMetricCardStyle"
+               TargetType="Border">
+            <Setter Property="Background" Value="{DynamicResource SurfaceBrush}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource BorderSoftBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="20"/>
+            <Setter Property="Padding" Value="16"/>
+            <Setter Property="Margin" Value="0,0,12,0"/>
+        </Style>
+
+        <Style x:Key="DetailsLabelStyle"
+               TargetType="TextBlock">
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
+        </Style>
+
+        <Style x:Key="DetailsValueStyle"
+               TargetType="TextBlock">
+            <Setter Property="FontSize" Value="22"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+            <Setter Property="Margin" Value="0,6,0,0"/>
+            <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+        </Style>
+
+        <Style x:Key="DetailsButtonStyle"
+               TargetType="Button"
+               BasedOn="{StaticResource AppSecondaryButtonStyle}">
+            <Setter Property="Height" Value="42"/>
+            <Setter Property="Padding" Value="16,0"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="MinWidth" Value="0"/>
+        </Style>
+
+        <Style x:Key="DetailsPrimaryButtonStyle"
+               TargetType="Button"
+               BasedOn="{StaticResource AppPrimaryButtonStyle}">
+            <Setter Property="Height" Value="42"/>
+            <Setter Property="Padding" Value="18,0"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="MinWidth" Value="0"/>
+        </Style>
+
+        <Style x:Key="InsightMiniCardStyle"
+               TargetType="Border">
+            <Setter Property="Background" Value="{DynamicResource SurfaceSoftBrush}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource BorderSoftBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="16"/>
+            <Setter Property="Padding" Value="14"/>
+            <Setter Property="Margin" Value="0,0,10,10"/>
+        </Style>
+
+        <Style x:Key="DetailsTabItemStyle" TargetType="TabItem">
+            <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TabItem">
+                        <Border x:Name="RootBorder"
+                                Background="Transparent"
+                                BorderBrush="Transparent"
+                                BorderThickness="1"
+                                CornerRadius="14"
+                                Margin="0,0,10,0"
+                                Padding="16,10">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"
+                                              ContentSource="Header"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter TargetName="RootBorder" Property="Background" Value="{DynamicResource AccentUltraSoftBrush}"/>
+                                <Setter TargetName="RootBorder" Property="BorderBrush" Value="{DynamicResource BorderSoftBrush}"/>
+                                <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="RootBorder" Property="Background" Value="{DynamicResource SurfaceSoftBrush}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="DetailsDataGridStyle" TargetType="DataGrid">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="RowBackground" Value="{DynamicResource SurfaceBrush}"/>
+            <Setter Property="AlternatingRowBackground" Value="{DynamicResource SurfaceSoftBrush}"/>
+            <Setter Property="HorizontalGridLinesBrush" Value="{DynamicResource BorderSoftBrush}"/>
+            <Setter Property="VerticalGridLinesBrush" Value="{DynamicResource BorderSoftBrush}"/>
+            <Setter Property="GridLinesVisibility" Value="Horizontal"/>
+            <Setter Property="HeadersVisibility" Value="Column"/>
+            <Setter Property="RowHeaderWidth" Value="0"/>
+            <Setter Property="CanUserAddRows" Value="False"/>
+            <Setter Property="CanUserDeleteRows" Value="False"/>
+            <Setter Property="CanUserResizeRows" Value="False"/>
+            <Setter Property="IsReadOnly" Value="True"/>
+            <Setter Property="AutoGenerateColumns" Value="False"/>
+            <Setter Property="SelectionMode" Value="Single"/>
+            <Setter Property="SelectionUnit" Value="FullRow"/>
+            <Setter Property="AlternationCount" Value="2"/>
+            <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+        </Style>
+
+        <Style TargetType="DataGridColumnHeader">
+            <Setter Property="Background" Value="{DynamicResource SurfaceSoftBrush}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource BorderSoftBrush}"/>
+            <Setter Property="BorderThickness" Value="0,0,0,1"/>
+            <Setter Property="Padding" Value="12,10"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
+        </Style>
+
+        <Style TargetType="DataGridCell">
+            <Setter Property="Padding" Value="12,10"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="FontSize" Value="13"/>
+        </Style>
+
+        <Style TargetType="DataGridRow">
+            <Setter Property="Background" Value="{DynamicResource SurfaceBrush}"/>
+            <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="DataGridRow">
+                        <Border x:Name="RowBorder"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="0"
+                                SnapsToDevicePixels="True">
+                            <SelectiveScrollingGrid>
+                                <SelectiveScrollingGrid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </SelectiveScrollingGrid.ColumnDefinitions>
+                                <SelectiveScrollingGrid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="Auto"/>
+                                </SelectiveScrollingGrid.RowDefinitions>
+                                <DataGridCellsPresenter Grid.Column="1"/>
+                                <DataGridDetailsPresenter Grid.Row="1"
+                                                          Grid.Column="1"
+                                                          Visibility="{TemplateBinding DetailsVisibility}"/>
+                            </SelectiveScrollingGrid>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="AlternationIndex" Value="1">
+                                <Setter TargetName="RowBorder" Property="Background" Value="{DynamicResource SurfaceSoftBrush}"/>
+                            </Trigger>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter TargetName="RowBorder" Property="Background" Value="{DynamicResource AccentUltraSoftBrush}"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="RowBorder" Property="Background" Value="{DynamicResource AccentUltraSoftBrush}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+    </Window.Resources>
+
+    <Grid>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="32"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <controls:WindowCaptionBar Grid.Row="0"/>
+
+        <Grid Grid.Row="1"
+              Margin="22">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="16"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="18"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="18"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="14"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="20"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <Border Width="52"
+                    Height="52"
+                    CornerRadius="16"
+                    Background="{DynamicResource AccentUltraSoftBrush}"
+                    BorderBrush="{DynamicResource BorderSoftBrush}"
+                    BorderThickness="1">
+                    <iconPacks:PackIconMaterial Kind="TextBoxSearchOutline"
+                                            Width="25"
+                                            Height="25"
+                                            Foreground="{DynamicResource AccentBrush}"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"/>
+                </Border>
+
+                <StackPanel Grid.Column="2" VerticalAlignment="Center">
+                    <TextBlock Text="{DynamicResource Details_Title}"
+                           FontSize="28"
+                           FontWeight="Bold"
+                           Foreground="{DynamicResource TextPrimaryBrush}"/>
+                    <TextBlock Text="{Binding SubtitleText}"
+                           FontSize="13"
+                           Margin="0,5,0,0"
+                           Foreground="{DynamicResource TextSecondaryBrush}"/>
+                    <TextBlock Text="{Binding Title}"
+                           FontSize="12"
+                           Margin="0,3,0,0"
+                           Foreground="{DynamicResource TextSecondaryBrush}"/>
+                </StackPanel>
+
+                <controls:CircularScore Grid.Column="4"
+                                        Score="{Binding ScoreText}"
+                                        Width="180"
+                                        Height="180"
+                                        VerticalAlignment="Center"/>
+
+            </Grid>
+
+            <UniformGrid Grid.Row="2" Columns="5">
+                <Border Style="{StaticResource DetailsMetricCardStyle}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="12"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Border Width="42" Height="42" CornerRadius="14" Background="{DynamicResource KpiGreenSoftBrush}">
+                            <iconPacks:PackIconMaterial Kind="ClockOutline" Width="20" Height="20" Foreground="{DynamicResource KpiGreenBrush}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <StackPanel Grid.Column="2">
+                            <TextBlock Text="{DynamicResource Common_Duration}" Style="{StaticResource DetailsLabelStyle}"/>
+                            <TextBlock Text="{Binding DurationText}" Style="{StaticResource DetailsValueStyle}"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+                <Border Style="{StaticResource DetailsMetricCardStyle}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="12"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Border Width="42" Height="42" CornerRadius="14" Background="{DynamicResource KpiPurpleSoftBrush}">
+                            <iconPacks:PackIconMaterial Kind="TimelineClockOutline" Width="20" Height="20" Foreground="{DynamicResource KpiPurpleBrush}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <StackPanel Grid.Column="2">
+                            <TextBlock Text="{DynamicResource Common_Tracked}" Style="{StaticResource DetailsLabelStyle}"/>
+                            <TextBlock Text="{Binding TrackedText}" Style="{StaticResource DetailsValueStyle}"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+                <Border Style="{StaticResource DetailsMetricCardStyle}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="12"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Border Width="42" Height="42" CornerRadius="14" Background="{DynamicResource KpiOrangeSoftBrush}">
+                            <iconPacks:PackIconMaterial Kind="AccountClockOutline" Width="20" Height="20" Foreground="{DynamicResource KpiOrangeBrush}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <StackPanel Grid.Column="2">
+                            <TextBlock Text="{DynamicResource Common_Away}" Style="{StaticResource DetailsLabelStyle}"/>
+                            <TextBlock Text="{Binding AfkText}" Style="{StaticResource DetailsValueStyle}"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+                <Border Style="{StaticResource DetailsMetricCardStyle}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="12"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Border Width="42" Height="42" CornerRadius="14" Background="{DynamicResource ErrorSoftBrush}">
+                            <iconPacks:PackIconMaterial Kind="SwapHorizontal" Width="20" Height="20" Foreground="{DynamicResource ErrorBrush}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <StackPanel Grid.Column="2">
+                            <TextBlock Text="{DynamicResource Common_Switches}" Style="{StaticResource DetailsLabelStyle}"/>
+                            <TextBlock Text="{Binding SwitchesText}" FontSize="16" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" Margin="0,8,0,0" TextTrimming="CharacterEllipsis"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+                <Border Background="{DynamicResource SurfaceBrush}" BorderBrush="{DynamicResource BorderSoftBrush}" BorderThickness="1" CornerRadius="20" Padding="16">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="12"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Border Width="42" Height="42" CornerRadius="14" Background="{DynamicResource AccentUltraSoftBrush}">
+                            <iconPacks:PackIconMaterial Kind="Target" Width="20" Height="20" Foreground="{DynamicResource AccentBrush}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <StackPanel Grid.Column="2">
+                            <TextBlock Text="{DynamicResource Details_BestFocusBlock}" Style="{StaticResource DetailsLabelStyle}"/>
+                            <TextBlock Text="{Binding BestFocusBlockText}" Style="{StaticResource DetailsValueStyle}"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+            </UniformGrid>
+
+            <Grid Grid.Row="4">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1.15*"/>
+                    <ColumnDefinition Width="18"/>
+                    <ColumnDefinition Width="1*"/>
+                </Grid.ColumnDefinitions>
+
+                <Border Grid.Column="0" Style="{StaticResource DetailsSectionCardStyle}">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="14"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+
+                        <Grid Grid.Row="0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="12"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Border Width="46" Height="46" CornerRadius="14" Background="{DynamicResource AccentUltraSoftBrush}">
+                                <iconPacks:PackIconMaterial Kind="LightbulbOnOutline" Width="22" Height="22" Foreground="{DynamicResource AccentBrush}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                            <StackPanel Grid.Column="2">
+                                <TextBlock Text="{DynamicResource Details_SessionInsight}" FontSize="22" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}"/>
+                                <TextBlock Text="{Binding InsightText}" FontSize="13" Margin="0,5,0,0" Foreground="{DynamicResource TextSecondaryBrush}" TextWrapping="Wrap"/>
+                            </StackPanel>
+                        </Grid>
+
+                        <Grid Grid.Row="2">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <Border Grid.Row="0" Grid.Column="0" Style="{StaticResource InsightMiniCardStyle}">
+                                <StackPanel>
+                                    <TextBlock Text="{DynamicResource Details_MainWorkContext}" Style="{StaticResource DetailsLabelStyle}"/>
+                                    <TextBlock Text="{Binding MainWorkContextText}" FontSize="16" FontWeight="Bold" Margin="0,6,0,0" Foreground="{DynamicResource TextPrimaryBrush}" TextTrimming="CharacterEllipsis"/>
+                                </StackPanel>
+                            </Border>
+                            <Border Grid.Row="0" Grid.Column="1" Style="{StaticResource InsightMiniCardStyle}" Margin="0,0,0,10">
+                                <StackPanel>
+                                    <TextBlock Text="{DynamicResource Details_MostUsedApp}" Style="{StaticResource DetailsLabelStyle}"/>
+                                    <TextBlock Text="{Binding MostUsedAppText}" FontSize="16" FontWeight="Bold" Margin="0,6,0,0" Foreground="{DynamicResource TextPrimaryBrush}" TextTrimming="CharacterEllipsis"/>
+                                </StackPanel>
+                            </Border>
+                            <Border Grid.Row="1" Grid.Column="0" Style="{StaticResource InsightMiniCardStyle}" Margin="0">
+                                <StackPanel>
+                                    <TextBlock Text="{DynamicResource Details_TopDistraction}" Style="{StaticResource DetailsLabelStyle}"/>
+                                    <TextBlock Text="{Binding TopDistractionText}" FontSize="16" FontWeight="Bold" Margin="0,6,0,0" Foreground="{DynamicResource TextPrimaryBrush}" TextTrimming="CharacterEllipsis"/>
+                                </StackPanel>
+                            </Border>
+                            <Border Grid.Row="1" Grid.Column="1" Style="{StaticResource InsightMiniCardStyle}" Margin="0,0,0,0">
+                                <StackPanel>
+                                    <TextBlock Text="{DynamicResource Details_TopInterrupter}" Style="{StaticResource DetailsLabelStyle}"/>
+                                    <TextBlock Text="{Binding TopInterrupterText}" FontSize="16" FontWeight="Bold" Margin="0,6,0,0" Foreground="{DynamicResource TextPrimaryBrush}" TextTrimming="CharacterEllipsis"/>
+                                </StackPanel>
+                            </Border>
+                        </Grid>
+                    </Grid>
+                </Border>
+
+                <Border Grid.Column="2" Style="{StaticResource DetailsSectionCardStyle}">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="14"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <StackPanel Grid.Row="0">
+                            <StackPanel Orientation="Horizontal">
+                                <iconPacks:PackIconMaterial Kind="ChartBarStacked" Width="22" Height="22" Margin="0,0,10,0" Foreground="{DynamicResource AccentBrush}" VerticalAlignment="Center"/>
+                                <TextBlock Text="{DynamicResource Details_ActivityBreakdown}" FontSize="22" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" VerticalAlignment="Center"/>
+                            </StackPanel>
+                            <TextBlock Text="{DynamicResource Details_ActivityBreakdownDescription}"
+                                   FontSize="13"
+                                   Margin="0,5,0,0"
+                                   Foreground="{DynamicResource TextSecondaryBrush}"
+                                   TextWrapping="Wrap"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Row="2">
+                            <Grid Margin="0,0,0,10">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="135"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="70"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="{DynamicResource Category_Productive}" Foreground="{DynamicResource TextSecondaryBrush}" VerticalAlignment="Center"/>
+                                <Grid Grid.Column="1" Height="10" VerticalAlignment="Center">
+                                    <Border Background="{DynamicResource SurfaceSoftBrush}" CornerRadius="5"/>
+                                    <Border Background="{DynamicResource ProductiveBrush}" CornerRadius="5" HorizontalAlignment="Left" Width="{Binding ProductiveBarWidth}"/>
+                                </Grid>
+                                <TextBlock Grid.Column="2" Text="{Binding ProductiveText}" HorizontalAlignment="Right" VerticalAlignment="Center" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}"/>
+                            </Grid>
+                            <Grid Margin="0,0,0,10">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="135"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="70"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="{DynamicResource Category_Neutral}" Foreground="{DynamicResource TextSecondaryBrush}" VerticalAlignment="Center"/>
+                                <Grid Grid.Column="1" Height="10" VerticalAlignment="Center">
+                                    <Border Background="{DynamicResource SurfaceSoftBrush}" CornerRadius="5"/>
+                                    <Border Background="{DynamicResource NeutralBrush}" CornerRadius="5" HorizontalAlignment="Left" Width="{Binding NeutralBarWidth}"/>
+                                </Grid>
+                                <TextBlock Grid.Column="2" Text="{Binding NeutralText}" HorizontalAlignment="Right" VerticalAlignment="Center" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}"/>
+                            </Grid>
+                            <Grid Margin="0,0,0,10">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="135"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="70"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="{DynamicResource Category_Communication}" Foreground="{DynamicResource TextSecondaryBrush}" VerticalAlignment="Center"/>
+                                <Grid Grid.Column="1" Height="10" VerticalAlignment="Center">
+                                    <Border Background="{DynamicResource SurfaceSoftBrush}" CornerRadius="5"/>
+                                    <Border Background="{DynamicResource CommunicationBrush}" CornerRadius="5" HorizontalAlignment="Left" Width="{Binding CommunicationBarWidth}"/>
+                                </Grid>
+                                <TextBlock Grid.Column="2" Text="{Binding CommunicationText}" HorizontalAlignment="Right" VerticalAlignment="Center" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}"/>
+                            </Grid>
+                            <Grid Margin="0,0,0,10">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="135"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="70"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="{DynamicResource Category_Distraction}" Foreground="{DynamicResource TextSecondaryBrush}" VerticalAlignment="Center"/>
+                                <Grid Grid.Column="1" Height="10" VerticalAlignment="Center">
+                                    <Border Background="{DynamicResource SurfaceSoftBrush}" CornerRadius="5"/>
+                                    <Border Background="{DynamicResource DistractionBrush}" CornerRadius="5" HorizontalAlignment="Left" Width="{Binding DistractionBarWidth}"/>
+                                </Grid>
+                                <TextBlock Grid.Column="2" Text="{Binding DistractionText}" HorizontalAlignment="Right" VerticalAlignment="Center" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}"/>
+                            </Grid>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="135"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="70"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="{DynamicResource Common_Away}" Foreground="{DynamicResource TextSecondaryBrush}" VerticalAlignment="Center"/>
+                                <Grid Grid.Column="1" Height="10" VerticalAlignment="Center">
+                                    <Border Background="{DynamicResource SurfaceSoftBrush}" CornerRadius="5"/>
+                                    <Border Background="{DynamicResource WarningBrush}" CornerRadius="5" HorizontalAlignment="Left" Width="{Binding AfkBarWidth}"/>
+                                </Grid>
+                                <TextBlock Grid.Column="2" Text="{Binding AfkText}" HorizontalAlignment="Right" VerticalAlignment="Center" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}"/>
+                            </Grid>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+            </Grid>
+
+            <Border Grid.Row="6" Style="{StaticResource DetailsSectionCardStyle}">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="12"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <StackPanel Grid.Row="0">
+                        <StackPanel Orientation="Horizontal">
+                            <iconPacks:PackIconMaterial Kind="TableLarge" Width="22" Height="22" Margin="0,0,10,0" Foreground="{DynamicResource AccentBrush}" VerticalAlignment="Center"/>
+                            <TextBlock Text="{DynamicResource Details_EventExplorer}" FontSize="22" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" VerticalAlignment="Center"/>
+                        </StackPanel>
+                        <TextBlock Text="{DynamicResource Details_EventExplorerDescription}"
+                               FontSize="13"
+                               Margin="0,5,0,0"
+                               Foreground="{DynamicResource TextSecondaryBrush}"/>
+                    </StackPanel>
+
+                    <TabControl Grid.Row="2"
+                            Background="Transparent"
+                            BorderThickness="0"
+                            TabStripPlacement="Top">
+                        <TabControl.Resources>
+                            <Style TargetType="TabItem" BasedOn="{StaticResource DetailsTabItemStyle}"/>
+                        </TabControl.Resources>
+
+                        <TabItem>
+                            <TabItem.Header>
+                                <StackPanel Orientation="Horizontal">
+                                    <iconPacks:PackIconMaterial Kind="TimelineTextOutline" Width="15" Height="15" Margin="0,0,7,0" VerticalAlignment="Center"/>
+                                    <TextBlock Text="{DynamicResource Timeline_Title}" VerticalAlignment="Center"/>
+                                    <Border Background="{DynamicResource SurfaceBrush}" BorderBrush="{DynamicResource BorderSoftBrush}" BorderThickness="1" CornerRadius="10" Padding="7,2" Margin="8,0,0,0">
+                                        <TextBlock Text="{Binding ActivityCountText}" FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}"/>
+                                    </Border>
+                                </StackPanel>
+                            </TabItem.Header>
+                            <Border Background="{DynamicResource SurfaceSoftBrush}" BorderBrush="{DynamicResource BorderSoftBrush}" BorderThickness="1" CornerRadius="18" Margin="0,14,0,0">
+                                <DataGrid Style="{StaticResource DetailsDataGridStyle}" ItemsSource="{Binding ActivityEvents}">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Binding="{Binding StartText}" Width="90">
+                                            <DataGridTextColumn.Header>
+                                                <TextBlock Text="{DynamicResource Grid_Start}"/>
+                                            </DataGridTextColumn.Header>
+                                        </DataGridTextColumn>
+                                        <DataGridTextColumn Binding="{Binding EndText}" Width="90">
+                                            <DataGridTextColumn.Header>
+                                                <TextBlock Text="{DynamicResource Grid_End}"/>
+                                            </DataGridTextColumn.Header>
+                                        </DataGridTextColumn>
+                                        <DataGridTextColumn Binding="{Binding DurationText, Converter={StaticResource DurationTextLocalizationConverter}}" Width="100">
+                                            <DataGridTextColumn.Header>
+                                                <TextBlock Text="{DynamicResource Common_Duration}"/>
+                                            </DataGridTextColumn.Header>
+                                        </DataGridTextColumn>
+                                        <DataGridTextColumn Binding="{Binding AppName}" Width="170">
+                                            <DataGridTextColumn.Header>
+                                                <TextBlock Text="{DynamicResource Grid_App}"/>
+                                            </DataGridTextColumn.Header>
+                                        </DataGridTextColumn>
+                                        <DataGridTextColumn Binding="{Binding Category, Converter={StaticResource CategoryDisplayNameConverter}}" Width="130">
+                                            <DataGridTextColumn.Header>
+                                                <TextBlock Text="{DynamicResource Common_Category}"/>
+                                            </DataGridTextColumn.Header>
+                                        </DataGridTextColumn>
+                                        <DataGridTextColumn Binding="{Binding WindowTitle}" Width="*">
+                                            <DataGridTextColumn.Header>
+                                                <TextBlock Text="{DynamicResource Grid_WindowTitle}"/>
+                                            </DataGridTextColumn.Header>
+                                        </DataGridTextColumn>
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                            </Border>
+                        </TabItem>
+
+                        <TabItem>
+                            <TabItem.Header>
+                                <StackPanel Orientation="Horizontal">
+                                    <iconPacks:PackIconMaterial Kind="SwapHorizontalBold" Width="15" Height="15" Margin="0,0,7,0" VerticalAlignment="Center"/>
+                                    <TextBlock Text="{DynamicResource Details_SwitchEvents}" VerticalAlignment="Center"/>
+                                    <Border Background="{DynamicResource SurfaceBrush}" BorderBrush="{DynamicResource BorderSoftBrush}" BorderThickness="1" CornerRadius="10" Padding="7,2" Margin="8,0,0,0">
+                                        <TextBlock Text="{Binding SwitchCountText}" FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}"/>
+                                    </Border>
+                                </StackPanel>
+                            </TabItem.Header>
+                            <Border Background="{DynamicResource SurfaceSoftBrush}" BorderBrush="{DynamicResource BorderSoftBrush}" BorderThickness="1" CornerRadius="18" Margin="0,14,0,0">
+                                <DataGrid Style="{StaticResource DetailsDataGridStyle}" ItemsSource="{Binding SwitchEvents}">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Binding="{Binding TimeText}" Width="90">
+                                            <DataGridTextColumn.Header>
+                                                <TextBlock Text="{DynamicResource Grid_Time}"/>
+                                            </DataGridTextColumn.Header>
+                                        </DataGridTextColumn>
+                                        <DataGridTextColumn Binding="{Binding FromCategory, Converter={StaticResource CategoryDisplayNameConverter}}" Width="130">
+                                            <DataGridTextColumn.Header>
+                                                <TextBlock Text="{DynamicResource Grid_From}"/>
+                                            </DataGridTextColumn.Header>
+                                        </DataGridTextColumn>
+                                        <DataGridTextColumn Binding="{Binding ToCategory, Converter={StaticResource CategoryDisplayNameConverter}}" Width="130">
+                                            <DataGridTextColumn.Header>
+                                                <TextBlock Text="{DynamicResource Grid_To}"/>
+                                            </DataGridTextColumn.Header>
+                                        </DataGridTextColumn>
+                                        <DataGridTextColumn Binding="{Binding IsDisruptiveText, Converter={StaticResource StatusTextLocalizationConverter}}" Width="110">
+                                            <DataGridTextColumn.Header>
+                                                <TextBlock Text="{DynamicResource Grid_Disruptive}"/>
+                                            </DataGridTextColumn.Header>
+                                        </DataGridTextColumn>
+                                        <DataGridTextColumn Binding="{Binding ToAppName}" Width="170">
+                                            <DataGridTextColumn.Header>
+                                                <TextBlock Text="{DynamicResource Grid_App}"/>
+                                            </DataGridTextColumn.Header>
+                                        </DataGridTextColumn>
+                                        <DataGridTextColumn Binding="{Binding ToWindowTitle}" Width="*">
+                                            <DataGridTextColumn.Header>
+                                                <TextBlock Text="{DynamicResource Grid_WindowTitle}"/>
+                                            </DataGridTextColumn.Header>
+                                        </DataGridTextColumn>
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                            </Border>
+                        </TabItem>
+
+                        <TabItem>
+                            <TabItem.Header>
+                                <StackPanel Orientation="Horizontal">
+                                    <iconPacks:PackIconMaterial Kind="TargetAccount" Width="15" Height="15" Margin="0,0,7,0" VerticalAlignment="Center"/>
+                                    <TextBlock Text="{DynamicResource Details_FocusBlocks}" VerticalAlignment="Center"/>
+                                    <Border Background="{DynamicResource SurfaceBrush}" BorderBrush="{DynamicResource BorderSoftBrush}" BorderThickness="1" CornerRadius="10" Padding="7,2" Margin="8,0,0,0">
+                                        <TextBlock Text="{Binding FocusBlockCountText}" FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}"/>
+                                    </Border>
+                                </StackPanel>
+                            </TabItem.Header>
+                            <Border Background="{DynamicResource SurfaceSoftBrush}" BorderBrush="{DynamicResource BorderSoftBrush}" BorderThickness="1" CornerRadius="18" Margin="0,14,0,0">
+                                <DataGrid Style="{StaticResource DetailsDataGridStyle}" ItemsSource="{Binding FocusBlocks}">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Binding="{Binding StartText}" Width="90">
+                                            <DataGridTextColumn.Header>
+                                                <TextBlock Text="{DynamicResource Grid_Start}"/>
+                                            </DataGridTextColumn.Header>
+                                        </DataGridTextColumn>
+                                        <DataGridTextColumn Binding="{Binding EndText}" Width="90">
+                                            <DataGridTextColumn.Header>
+                                                <TextBlock Text="{DynamicResource Grid_End}"/>
+                                            </DataGridTextColumn.Header>
+                                        </DataGridTextColumn>
+                                        <DataGridTextColumn Binding="{Binding DurationText, Converter={StaticResource DurationTextLocalizationConverter}}" Width="100">
+                                            <DataGridTextColumn.Header>
+                                                <TextBlock Text="{DynamicResource Common_Duration}"/>
+                                            </DataGridTextColumn.Header>
+                                        </DataGridTextColumn>
+                                        <DataGridTextColumn Binding="{Binding MainApp}" Width="170">
+                                            <DataGridTextColumn.Header>
+                                                <TextBlock Text="{DynamicResource Grid_MainApp}"/>
+                                            </DataGridTextColumn.Header>
+                                        </DataGridTextColumn>
+                                        <DataGridTextColumn Binding="{Binding Category, Converter={StaticResource CategoryDisplayNameConverter}}" Width="130">
+                                            <DataGridTextColumn.Header>
+                                                <TextBlock Text="{DynamicResource Common_Category}"/>
+                                            </DataGridTextColumn.Header>
+                                        </DataGridTextColumn>
+                                        <DataGridTextColumn Binding="{Binding BreakReason, Converter={StaticResource StatusTextLocalizationConverter}}" Width="140">
+                                            <DataGridTextColumn.Header>
+                                                <TextBlock Text="{DynamicResource Grid_BreakReason}"/>
+                                            </DataGridTextColumn.Header>
+                                        </DataGridTextColumn>
+                                        <DataGridTextColumn Binding="{Binding LastWindowTitle}" Width="*">
+                                            <DataGridTextColumn.Header>
+                                                <TextBlock Text="{DynamicResource Grid_LastWindowTitle}"/>
+                                            </DataGridTextColumn.Header>
+                                        </DataGridTextColumn>
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                            </Border>
+                        </TabItem>
+                    </TabControl>
+                </Grid>
+            </Border>
+
+            <Grid Grid.Row="7" Margin="0,12,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="8"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <iconPacks:PackIconMaterial Kind="InformationOutline" Width="15" Height="15" Foreground="{DynamicResource TextSecondaryBrush}" VerticalAlignment="Center"/>
+                <TextBlock Grid.Column="2"
+                       Text="{DynamicResource Details_ReadOnlyNote}"
+                       FontSize="12"
+                       Foreground="{DynamicResource TextSecondaryBrush}"
+                       VerticalAlignment="Center"/>
+            </Grid>
+        </Grid>
+    </Grid>
+</Window>

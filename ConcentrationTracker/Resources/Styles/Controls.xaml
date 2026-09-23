@@ -1,0 +1,189 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <Style x:Key="AppCardStyle"
+           TargetType="Border">
+        <Setter Property="Background"
+                Value="{DynamicResource SurfaceBrush}"/>
+        <Setter Property="BorderBrush"
+                Value="{DynamicResource BorderSoftBrush}"/>
+        <Setter Property="BorderThickness"
+                Value="1"/>
+        <Setter Property="CornerRadius"
+                Value="24"/>
+        <Setter Property="Padding"
+                Value="22"/>
+        <Setter Property="SnapsToDevicePixels"
+                Value="True"/>
+        <Setter Property="Effect">
+            <Setter.Value>
+                <DropShadowEffect Color="{DynamicResource ShadowColor}"
+                                  BlurRadius="22"
+                                  ShadowDepth="5"
+                                  Opacity="0.12"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="CardStyle"
+           TargetType="Border"
+           BasedOn="{StaticResource AppCardStyle}"/>
+
+    <Style x:Key="AppPrimaryButtonStyle"
+           TargetType="Button">
+        <Setter Property="Height"
+                Value="42"/>
+        <Setter Property="Padding"
+                Value="18,0"/>
+        <Setter Property="FontWeight"
+                Value="SemiBold"/>
+        <Setter Property="Foreground"
+                Value="{DynamicResource TextOnAccentBrush}"/>
+        <Setter Property="Background"
+                Value="{DynamicResource AccentBrush}"/>
+        <Setter Property="BorderBrush"
+                Value="{DynamicResource AccentBrush}"/>
+        <Setter Property="BorderThickness"
+                Value="1"/>
+        <Setter Property="Cursor"
+                Value="Hand"/>
+        <Setter Property="FocusVisualStyle"
+                Value="{x:Null}"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="Root"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="14">
+                        <ContentPresenter HorizontalAlignment="Center"
+                                          VerticalAlignment="Center"/>
+                    </Border>
+
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver"
+                                 Value="True">
+                            <Setter TargetName="Root"
+                                    Property="Background"
+                                    Value="{DynamicResource AccentHoverBrush}"/>
+                            <Setter TargetName="Root"
+                                    Property="BorderBrush"
+                                    Value="{DynamicResource AccentHoverBrush}"/>
+                        </Trigger>
+
+                        <Trigger Property="IsKeyboardFocused"
+                                 Value="True">
+                            <Setter TargetName="Root"
+                                    Property="BorderBrush"
+                                    Value="{DynamicResource AccentHoverBrush}"/>
+                        </Trigger>
+
+                        <Trigger Property="IsPressed"
+                                 Value="True">
+                            <Setter TargetName="Root"
+                                    Property="Opacity"
+                                    Value="0.86"/>
+                        </Trigger>
+
+                        <Trigger Property="IsEnabled"
+                                 Value="False">
+                            <Setter TargetName="Root"
+                                    Property="Opacity"
+                                    Value="0.45"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="AppSecondaryButtonStyle"
+           TargetType="Button">
+        <Setter Property="Height"
+                Value="42"/>
+        <Setter Property="Padding"
+                Value="18,0"/>
+        <Setter Property="FontWeight"
+                Value="SemiBold"/>
+        <Setter Property="Foreground"
+                Value="{DynamicResource TextPrimaryBrush}"/>
+        <Setter Property="Background"
+                Value="{DynamicResource SurfaceSoftBrush}"/>
+        <Setter Property="BorderBrush"
+                Value="{DynamicResource BorderBrush}"/>
+        <Setter Property="BorderThickness"
+                Value="1"/>
+        <Setter Property="Cursor"
+                Value="Hand"/>
+        <Setter Property="FocusVisualStyle"
+                Value="{x:Null}"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="Root"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="14">
+                        <ContentPresenter HorizontalAlignment="Center"
+                                          VerticalAlignment="Center"/>
+                    </Border>
+
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver"
+                                 Value="True">
+                            <Setter TargetName="Root"
+                                    Property="Background"
+                                    Value="{DynamicResource SurfaceElevatedBrush}"/>
+                        </Trigger>
+
+                        <Trigger Property="IsKeyboardFocused"
+                                 Value="True">
+                            <Setter TargetName="Root"
+                                    Property="BorderBrush"
+                                    Value="{DynamicResource AccentBrush}"/>
+                        </Trigger>
+
+                        <Trigger Property="IsPressed"
+                                 Value="True">
+                            <Setter TargetName="Root"
+                                    Property="Opacity"
+                                    Value="0.86"/>
+                        </Trigger>
+
+                        <Trigger Property="IsEnabled"
+                                 Value="False">
+                            <Setter TargetName="Root"
+                                    Property="Opacity"
+                                    Value="0.45"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="HeaderIconButtonStyle"
+           TargetType="Button"
+           BasedOn="{StaticResource AppSecondaryButtonStyle}">
+        <Setter Property="Width"
+                Value="44"/>
+        <Setter Property="Height"
+                Value="44"/>
+        <Setter Property="Padding"
+                Value="0"/>
+    </Style>
+
+    <Style x:Key="HeaderPillButtonStyle"
+           TargetType="Button"
+           BasedOn="{StaticResource AppSecondaryButtonStyle}">
+        <Setter Property="Width"
+                Value="86"/>
+        <Setter Property="Height"
+                Value="44"/>
+        <Setter Property="Padding"
+                Value="0"/>
+    </Style>
+
+</ResourceDictionary>

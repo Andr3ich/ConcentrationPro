@@ -1,16 +1,36 @@
-﻿<Application x:Class="ConcentrationTracker.App"
+<Application x:Class="ConcentrationTracker.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:converters="clr-namespace:ConcentrationTracker.Core.Converters"
              StartupUri="MainWindow.xaml">
 
     <Application.Resources>
+
         <ResourceDictionary>
-            <Style TargetType="TextBlock">
-                <Setter Property="FontFamily" Value="Segoe UI"/>
-            </Style>
+
             <ResourceDictionary.MergedDictionaries>
+
                 <ResourceDictionary Source="Theme/Theme.xaml"/>
+
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Themes/Light.Blue.xaml"/>
+
+                <ResourceDictionary Source="/ConcentrationTracker;component/Resources/Themes/ThemeLight.xaml"/>
+                <ResourceDictionary Source="/ConcentrationTracker;component/Resources/Localization/StringsEn.xaml"/>
+                <ResourceDictionary Source="/ConcentrationTracker;component/Resources/Styles/Typography.xaml"/>
+                <ResourceDictionary Source="/ConcentrationTracker;component/Resources/Styles/Controls.xaml"/>
+
             </ResourceDictionary.MergedDictionaries>
+
+            <converters:BoolToVisibilityConverter
+                x:Key="BoolToVisibilityConverter"/>
+
+            <converters:AppCategoryToBrushConverter
+                x:Key="AppCategoryToBrushConverter"/>
+
         </ResourceDictionary>
+
     </Application.Resources>
+
 </Application>

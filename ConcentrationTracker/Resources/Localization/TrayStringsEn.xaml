@@ -1,0 +1,27 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib">
+
+    <sys:String x:Key="Tray_OpenDashboard">Open Dashboard</sys:String>
+    <sys:String x:Key="Tray_StartWithWindows">Start with Windows</sys:String>
+    <sys:String x:Key="Tray_Exit">Exit ConcentrationPro</sys:String>
+
+    <sys:String x:Key="Tray_StatusFormat">Status: {0}</sys:String>
+    <sys:String x:Key="Tray_SessionTimeFormat">Session Time: {0}</sys:String>
+    <sys:String x:Key="Tray_ScoreFormat">Score: {0}</sys:String>
+    <sys:String x:Key="Tray_TrackedTimeFormat">Tracked Time: {0}</sys:String>
+    <sys:String x:Key="Tray_FocusStreakFormat">Focus Streak: {0}</sys:String>
+    <sys:String x:Key="Tray_ProductiveTimeFormat">Productive Time: {0}</sys:String>
+
+    <sys:String x:Key="Tray_ActiveShort">Active</sys:String>
+    <sys:String x:Key="Tray_PausedShort">Paused</sys:String>
+    <sys:String x:Key="Tray_TooltipFormat">ConcentrationPro | {0} | Score {1}</sys:String>
+
+    <sys:String x:Key="Tray_BalloonStillRunningTitle">ConcentrationPro is still running</sys:String>
+    <sys:String x:Key="Tray_BalloonStillRunningText">The dashboard has been hidden to the system tray. Monitoring continues in the background. Double-click the tray icon to reopen it.</sys:String>
+
+    <sys:String x:Key="Tray_StartupEnabledText">Start with Windows enabled. The app will open minimized to the tray.</sys:String>
+    <sys:String x:Key="Tray_StartupDisabledText">Start with Windows disabled.</sys:String>
+    <sys:String x:Key="Tray_StartupChangeFailedText">Could not change the Windows startup setting.</sys:String>
+
+</ResourceDictionary>

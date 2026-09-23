@@ -1,0 +1,339 @@
+<UserControl x:Class="ConcentrationTracker.MVVM.View.Controls.SessionSummaryPanel"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks">
+
+    <UserControl.Resources>
+
+        <Style x:Key="SummarySectionCardStyle" TargetType="Border">
+            <Setter Property="Background" Value="{DynamicResource SurfaceBrush}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource BorderSoftBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="22"/>
+            <Setter Property="Padding" Value="20"/>
+        </Style>
+
+        <Style x:Key="MiniMetricCardStyle" TargetType="Border">
+            <Setter Property="Background" Value="{DynamicResource SurfaceBrush}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource BorderSoftBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="18"/>
+            <Setter Property="Padding" Value="14"/>
+            <Setter Property="Margin" Value="0,0,0,12"/>
+        </Style>
+
+    </UserControl.Resources>
+
+    <Grid>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="16"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="18"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0">
+
+            <TextBlock Text="{DynamicResource Summary_Title}"
+                       FontSize="{StaticResource FontSizeTitle}"
+                       FontWeight="Bold"
+                       Foreground="{DynamicResource TextPrimaryBrush}"/>
+
+            <TextBlock Text="{DynamicResource Summary_Subtitle}"
+                       FontSize="13"
+                       Margin="0,5,0,0"
+                       Foreground="{DynamicResource TextSecondaryBrush}"/>
+
+        </StackPanel>
+
+        <Border Grid.Row="2"
+                Style="{StaticResource SummarySectionCardStyle}">
+
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="14"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Border Width="46"
+                        Height="46"
+                        CornerRadius="15"
+                        Background="{DynamicResource AccentUltraSoftBrush}">
+                    <iconPacks:PackIconMaterial Kind="LightbulbOnOutline"
+                                                Width="22"
+                                                Height="22"
+                                                Foreground="{DynamicResource AccentBrush}"
+                                                HorizontalAlignment="Center"
+                                                VerticalAlignment="Center"/>
+                </Border>
+
+                <StackPanel Grid.Column="2"
+                            VerticalAlignment="Center">
+                    <TextBlock Text="{DynamicResource Summary_FocusInsight}"
+                               FontSize="15"
+                               FontWeight="Bold"
+                               Foreground="{DynamicResource TextPrimaryBrush}"/>
+
+                    <TextBlock Text="{Binding SessionInsight, Mode=OneWay}"
+                               FontSize="13"
+                               Margin="0,5,0,0"
+                               TextWrapping="Wrap"
+                               Foreground="{DynamicResource TextSecondaryBrush}"/>
+                </StackPanel>
+            </Grid>
+
+        </Border>
+
+        <Grid Grid.Row="4">
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1.02*"/>
+                <ColumnDefinition Width="20"/>
+                <ColumnDefinition Width="1.08*"/>
+            </Grid.ColumnDefinitions>
+
+            <Border Grid.Column="0"
+                    Style="{StaticResource SummarySectionCardStyle}">
+
+                <StackPanel>
+
+                    <StackPanel Orientation="Horizontal">
+                        <iconPacks:PackIconMaterial Kind="ChartDonut"
+                                                    Width="19"
+                                                    Height="19"
+                                                    Foreground="{DynamicResource AccentBrush}"
+                                                    VerticalAlignment="Center"/>
+
+                        <TextBlock Text="{DynamicResource Summary_ActivityBalance}"
+                                   Margin="10,0,0,0"
+                                   FontSize="18"
+                                   FontWeight="Bold"
+                                   Foreground="{DynamicResource TextPrimaryBrush}"
+                                   VerticalAlignment="Center"/>
+                    </StackPanel>
+
+                    <TextBlock Text="{DynamicResource Summary_ActivityBalanceDescription}"
+                               FontSize="12"
+                               Margin="0,6,0,18"
+                               Foreground="{DynamicResource TextSecondaryBrush}"
+                               TextWrapping="Wrap"/>
+
+                    <Border Height="14"
+                            Width="{Binding SummaryStackBarWidth, Mode=OneWay}"
+                            MaxWidth="560"
+                            HorizontalAlignment="Left"
+                            CornerRadius="7"
+                            ClipToBounds="True"
+                            Background="{DynamicResource BorderSoftBrush}">
+
+                        <StackPanel Orientation="Horizontal">
+                            <Border Width="{Binding ProductiveStackWidth, Mode=OneWay}" Background="{DynamicResource ProductiveBrush}"/>
+                            <Border Width="{Binding NeutralStackWidth, Mode=OneWay}" Background="{DynamicResource NeutralBrush}"/>
+                            <Border Width="{Binding CommunicationStackWidth, Mode=OneWay}" Background="{DynamicResource CommunicationBrush}"/>
+                            <Border Width="{Binding DistractionStackWidth, Mode=OneWay}" Background="{DynamicResource DistractionBrush}"/>
+                            <Border Width="{Binding AfkStackWidth, Mode=OneWay}" Background="{DynamicResource WarningBrush}"/>
+                        </StackPanel>
+
+                    </Border>
+
+                    <StackPanel Margin="0,16,0,0">
+
+                        <Border BorderBrush="{DynamicResource BorderSoftBrush}" BorderThickness="0,0,0,1" Padding="0,11">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="10"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <Ellipse Width="9" Height="9" Fill="{DynamicResource ProductiveBrush}" VerticalAlignment="Center"/>
+                                <TextBlock Grid.Column="2" Text="{DynamicResource Category_Productive}" FontSize="13" Foreground="{DynamicResource TextSecondaryBrush}" VerticalAlignment="Center"/>
+                                <TextBlock Grid.Column="3" Text="{Binding ProductiveDuration, Mode=OneWay}" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" VerticalAlignment="Center"/>
+                            </Grid>
+                        </Border>
+
+                        <Border BorderBrush="{DynamicResource BorderSoftBrush}" BorderThickness="0,0,0,1" Padding="0,11">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="10"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <Ellipse Width="9" Height="9" Fill="{DynamicResource CommunicationBrush}" VerticalAlignment="Center"/>
+                                <TextBlock Grid.Column="2" Text="{DynamicResource Category_Communication}" FontSize="13" Foreground="{DynamicResource TextSecondaryBrush}" VerticalAlignment="Center"/>
+                                <TextBlock Grid.Column="3" Text="{Binding CommunicationDuration, Mode=OneWay}" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" VerticalAlignment="Center"/>
+                            </Grid>
+                        </Border>
+
+                        <Border BorderBrush="{DynamicResource BorderSoftBrush}" BorderThickness="0,0,0,1" Padding="0,11">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="10"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <Ellipse Width="9" Height="9" Fill="{DynamicResource NeutralBrush}" VerticalAlignment="Center"/>
+                                <TextBlock Grid.Column="2" Text="{DynamicResource Category_Neutral}" FontSize="13" Foreground="{DynamicResource TextSecondaryBrush}" VerticalAlignment="Center"/>
+                                <TextBlock Grid.Column="3" Text="{Binding NeutralDuration, Mode=OneWay}" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" VerticalAlignment="Center"/>
+                            </Grid>
+                        </Border>
+
+                        <Border BorderBrush="{DynamicResource BorderSoftBrush}" BorderThickness="0,0,0,1" Padding="0,11">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="10"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <Ellipse Width="9" Height="9" Fill="{DynamicResource DistractionBrush}" VerticalAlignment="Center"/>
+                                <TextBlock Grid.Column="2" Text="{DynamicResource Category_Distraction}" FontSize="13" Foreground="{DynamicResource TextSecondaryBrush}" VerticalAlignment="Center"/>
+                                <TextBlock Grid.Column="3" Text="{Binding DistractionDuration, Mode=OneWay}" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" VerticalAlignment="Center"/>
+                            </Grid>
+                        </Border>
+
+                        <Border BorderBrush="{DynamicResource BorderSoftBrush}" BorderThickness="0,0,0,1" Padding="0,11">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="10"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <Ellipse Width="9" Height="9" Fill="{DynamicResource WarningBrush}" VerticalAlignment="Center"/>
+                                <TextBlock Grid.Column="2" Text="{DynamicResource Summary_AwayTime}" FontSize="13" Foreground="{DynamicResource TextSecondaryBrush}" VerticalAlignment="Center"/>
+                                <TextBlock Grid.Column="3" Text="{Binding AwayTime, Mode=OneWay}" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" VerticalAlignment="Center"/>
+                            </Grid>
+                        </Border>
+
+                        <Border Padding="0,11,0,0">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="10"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <Ellipse Width="9" Height="9" Fill="{DynamicResource WarningBrush}" VerticalAlignment="Center"/>
+                                <TextBlock Grid.Column="2" Text="{DynamicResource Summary_AwaySessions}" FontSize="13" Foreground="{DynamicResource TextSecondaryBrush}" VerticalAlignment="Center"/>
+                                <TextBlock Grid.Column="3" Text="{Binding AfkSessions, Mode=OneWay}" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" VerticalAlignment="Center"/>
+                            </Grid>
+                        </Border>
+
+                    </StackPanel>
+
+                </StackPanel>
+
+            </Border>
+
+            <Border Grid.Column="2"
+                    Style="{StaticResource SummarySectionCardStyle}">
+
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="14"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <StackPanel Grid.Row="0">
+                        <StackPanel Orientation="Horizontal">
+                            <iconPacks:PackIconMaterial Kind="TextBoxSearchOutline"
+                                                        Width="19"
+                                                        Height="19"
+                                                        Foreground="{DynamicResource AccentBrush}"
+                                                        VerticalAlignment="Center"/>
+
+                            <TextBlock Text="{DynamicResource Summary_FocusDiagnostics}"
+                                       Margin="10,0,0,0"
+                                       FontSize="18"
+                                       FontWeight="Bold"
+                                       Foreground="{DynamicResource TextPrimaryBrush}"
+                                       VerticalAlignment="Center"/>
+                        </StackPanel>
+
+                        <TextBlock Text="{DynamicResource Summary_BrowserContextsDescription}"
+                                   FontSize="12"
+                                   Margin="0,6,0,0"
+                                   Foreground="{DynamicResource TextSecondaryBrush}"
+                                   TextWrapping="Wrap"/>
+                    </StackPanel>
+
+                    <StackPanel Grid.Row="2">
+
+                        <Border BorderBrush="{DynamicResource BorderSoftBrush}" BorderThickness="0,0,0,1" Padding="0,12">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="12"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <Border Width="34" Height="34" CornerRadius="11" Background="{DynamicResource KpiGreenSoftBrush}">
+                                    <iconPacks:PackIconMaterial Kind="CheckCircleOutline" Width="16" Height="16" Foreground="{DynamicResource KpiGreenBrush}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                                <TextBlock Grid.Column="2" Text="{DynamicResource Summary_WorkContext}" FontSize="12" Foreground="{DynamicResource TextSecondaryBrush}" VerticalAlignment="Top"/>
+                                <TextBlock Grid.Column="2" Text="{Binding MainWorkContextMetric.DisplayText, Mode=OneWay}" FontSize="13" FontWeight="Bold" Margin="0,18,0,0" Foreground="{DynamicResource TextPrimaryBrush}" TextTrimming="CharacterEllipsis" ToolTip="{Binding MainWorkContextMetric.DisplayText, Mode=OneWay}"/>
+                            </Grid>
+                        </Border>
+
+                        <Border BorderBrush="{DynamicResource BorderSoftBrush}" BorderThickness="0,0,0,1" Padding="0,12">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="12"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <Border Width="34" Height="34" CornerRadius="11" Background="{DynamicResource ErrorSoftBrush}">
+                                    <iconPacks:PackIconMaterial Kind="AlertCircleOutline" Width="16" Height="16" Foreground="{DynamicResource DistractionBrush}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                                <TextBlock Grid.Column="2" Text="{DynamicResource Summary_DistractionContext}" FontSize="12" Foreground="{DynamicResource TextSecondaryBrush}" VerticalAlignment="Top"/>
+                                <TextBlock Grid.Column="2" Text="{Binding TopDistractionMetric.DisplayText, Mode=OneWay}" FontSize="13" FontWeight="Bold" Margin="0,18,0,0" Foreground="{DynamicResource TextPrimaryBrush}" TextTrimming="CharacterEllipsis" ToolTip="{Binding TopDistractionMetric.DisplayText, Mode=OneWay}"/>
+                            </Grid>
+                        </Border>
+
+                        <Border BorderBrush="{DynamicResource BorderSoftBrush}" BorderThickness="0,0,0,1" Padding="0,12">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="12"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <Border Width="34" Height="34" CornerRadius="11" Background="{DynamicResource KpiPurpleSoftBrush}">
+                                    <iconPacks:PackIconMaterial Kind="SwapHorizontal" Width="16" Height="16" Foreground="{DynamicResource KpiPurpleBrush}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                                <TextBlock Grid.Column="2" Text="{DynamicResource Summary_Interruptions}" FontSize="13" Foreground="{DynamicResource TextSecondaryBrush}" VerticalAlignment="Center"/>
+                                <TextBlock Grid.Column="3" Text="{Binding DisruptiveSwitches, Mode=OneWay}" FontSize="15" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" VerticalAlignment="Center"/>
+                            </Grid>
+                        </Border>
+
+                        <Border Padding="0,12,0,0">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="12"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <Border Width="34" Height="34" CornerRadius="11" Background="{DynamicResource KpiOrangeSoftBrush}">
+                                    <iconPacks:PackIconMaterial Kind="TimerSand" Width="16" Height="16" Foreground="{DynamicResource KpiOrangeBrush}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                                <TextBlock Grid.Column="2" Text="{DynamicResource Summary_AwaySummary}" FontSize="12" Foreground="{DynamicResource TextSecondaryBrush}" VerticalAlignment="Top"/>
+                                <TextBlock Grid.Column="2" Text="{Binding AwaySummary, Mode=OneWay}" FontSize="13" FontWeight="Bold" Margin="0,18,0,0" Foreground="{DynamicResource TextPrimaryBrush}" TextTrimming="CharacterEllipsis" ToolTip="{Binding AwaySummary, Mode=OneWay}"/>
+                            </Grid>
+                        </Border>
+
+                    </StackPanel>
+                </Grid>
+
+            </Border>
+
+        </Grid>
+
+    </Grid>
+
+</UserControl>

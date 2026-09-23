@@ -1,0 +1,325 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib">
+
+    <sys:String x:Key="App_Subtitle">Window Switching Analysis</sys:String>
+    <sys:String x:Key="App_Title">ConcentrationPro</sys:String>
+    <sys:String x:Key="Categories_AppPatternTooltip">Example: chrome, msedge, winword, telegram</sys:String>
+    <sys:String x:Key="Categories_AppProcess">App / process</sys:String>
+    <sys:String x:Key="Categories_CreateRule">Create rule</sys:String>
+    <sys:String x:Key="Categories_CreateRuleDescription">For browser tabs use title rules: chrome + youtube → Distraction, chrome + github → Productive</sys:String>
+    <sys:String x:Key="Categories_LastCaptured">Last captured: {0}</sys:String>
+    <sys:String x:Key="Categories_NoExternalCaptured">No external app captured yet</sys:String>
+    <sys:String x:Key="Categories_QuickClassify">Quick classify</sys:String>
+    <sys:String x:Key="Categories_QuickClassifyDescription">Uses the last non-dashboard app or browser tab</sys:String>
+    <sys:String x:Key="Categories_RulesDescription">Specific browser-title rules should stay above general app rules</sys:String>
+    <sys:String x:Key="Categories_RulesTitle">Category Rules</sys:String>
+    <sys:String x:Key="Categories_StatusCopied">Copied last external activity: {0}.</sys:String>
+    <sys:String x:Key="Categories_StatusLoaded">Loaded {0} category rules.</sys:String>
+    <sys:String x:Key="Categories_StatusNeedApp">Enter an app pattern before adding a rule.</sys:String>
+    <sys:String x:Key="Categories_StatusNeedExternal">Open another app or browser tab first. Dashboard itself is ignored.</sys:String>
+    <sys:String x:Key="Categories_StatusRuleAdded">Added rule for {0} as {1}.</sys:String>
+    <sys:String x:Key="Categories_StatusSaved">Saved {0} category rules. New window switches will use the updated rules.</sys:String>
+    <sys:String x:Key="Categories_StatusSelectDelete">Select a rule to delete.</sys:String>
+    <sys:String x:Key="Categories_Subtitle">Classify apps and browser tabs as work, communication, neutral activity or distractions</sys:String>
+    <sys:String x:Key="Categories_Title">App Categories</sys:String>
+    <sys:String x:Key="Categories_TitlePatternTooltip">Example: youtube, github, docs, *</sys:String>
+    <sys:String x:Key="Categories_WindowTitlePattern">Window / tab title</sys:String>
+    <sys:String x:Key="Category_CommsShort">Comms</sys:String>
+    <sys:String x:Key="Category_Communication">Communication</sys:String>
+    <sys:String x:Key="Category_DistractShort">Distract</sys:String>
+    <sys:String x:Key="Category_Distraction">Distraction</sys:String>
+    <sys:String x:Key="Category_Neutral">Neutral</sys:String>
+    <sys:String x:Key="Category_Productive">Productive</sys:String>
+    <sys:String x:Key="Category_System">System</sys:String>
+    <sys:String x:Key="Category_Work">Work</sys:String>
+    <sys:String x:Key="ChartCard_Subtitle">Window switching during the session</sys:String>
+    <sys:String x:Key="ChartCard_Title">Focus Activity</sys:String>
+    <sys:String x:Key="Charts_ScoreSubtitle">Score samples collected during active monitoring</sys:String>
+    <sys:String x:Key="Charts_ScoreTitle">Concentration Over Time</sys:String>
+    <sys:String x:Key="Charts_WindowSwitchingSubtitle">Normal and disruptive switches per 1-minute interval</sys:String>
+    <sys:String x:Key="Charts_WindowSwitchingTitle">Window Switching Frequency</sys:String>
+    <sys:String x:Key="Common_Action">Action</sys:String>
+    <sys:String x:Key="Common_Add">Add</sys:String>
+    <sys:String x:Key="Common_Away">Away</sys:String>
+    <sys:String x:Key="Common_Cancel">Cancel</sys:String>
+    <sys:String x:Key="Common_Category">Category</sys:String>
+    <sys:String x:Key="Common_Clear">Clear</sys:String>
+    <sys:String x:Key="Common_Close">Close</sys:String>
+    <sys:String x:Key="Common_Delete">Delete</sys:String>
+    <sys:String x:Key="Common_Disruptive">disruptive</sys:String>
+    <sys:String x:Key="Common_Duration">Duration</sys:String>
+    <sys:String x:Key="Common_Enabled">Enabled</sys:String>
+    <sys:String x:Key="Common_HoursSuffix">h</sys:String>
+    <sys:String x:Key="Common_MinutesSuffix" xml:space="preserve"> min</sys:String>
+    <sys:String x:Key="Common_NoData">No data</sys:String>
+    <sys:String x:Key="Common_None">None</sys:String>
+    <sys:String x:Key="Common_Open">Open</sys:String>
+    <sys:String x:Key="Common_Reload">Reload</sys:String>
+    <sys:String x:Key="Common_Save">Save</sys:String>
+    <sys:String x:Key="Common_Score">Score</sys:String>
+    <sys:String x:Key="Common_ScoreLower">score</sys:String>
+    <sys:String x:Key="Common_SecondsSuffix" xml:space="preserve"> sec</sys:String>
+    <sys:String x:Key="Common_Settings">Settings</sys:String>
+    <sys:String x:Key="Common_Switches">Switches</sys:String>
+    <sys:String x:Key="Common_Total">total</sys:String>
+    <sys:String x:Key="Common_Tracked">Tracked</sys:String>
+    <sys:String x:Key="Common_Use">Use</sys:String>
+    <sys:String x:Key="Details_ActivityBreakdown">Activity Breakdown</sys:String>
+    <sys:String x:Key="Details_ActivityBreakdownDescription">How this saved session was distributed across work, neutral, communication, distractions and away time</sys:String>
+    <sys:String x:Key="Details_BestFocusBlock">Best Focus Block</sys:String>
+    <sys:String x:Key="Details_EventExplorer">Event Explorer</sys:String>
+    <sys:String x:Key="Details_EventExplorerDescription">Inspect timeline events, switch history and focus blocks saved for this session</sys:String>
+    <sys:String x:Key="Details_FocusBlocks">Focus Blocks</sys:String>
+    <sys:String x:Key="Details_FocusQualityStability">Quality {0}% · Stability {1}%</sys:String>
+    <sys:String x:Key="Details_MainWorkContext">Main Work Context</sys:String>
+    <sys:String x:Key="Details_MostUsedApp">Most Used App</sys:String>
+    <sys:String x:Key="Details_NoInsight">No insight saved for this session.</sys:String>
+    <sys:String x:Key="Details_ReadOnlyNote">This view is read-only and shows the exact state of the saved session snapshot.</sys:String>
+    <sys:String x:Key="Details_SessionInsight">Session Insight</sys:String>
+    <sys:String x:Key="Details_SubtitleBase">Detailed saved session analysis</sys:String>
+    <sys:String x:Key="Details_SubtitleWithStatus">Detailed saved session analysis · {0}</sys:String>
+    <sys:String x:Key="Details_SwitchEvents">Switch Events</sys:String>
+    <sys:String x:Key="Details_Title">Focus Session Details</sys:String>
+    <sys:String x:Key="Details_TitleWithDate">Session Details · {0}</sys:String>
+    <sys:String x:Key="Details_TopDistraction">Top Distraction</sys:String>
+    <sys:String x:Key="Details_TopInterrupter">Top Interrupter</sys:String>
+    <sys:String x:Key="Details_WindowTitle">Session Details</sys:String>
+    <sys:String x:Key="Duration_Hours">{0} h {1} min {2} sec</sys:String>
+    <sys:String x:Key="Duration_Minutes">{0} min {1} sec</sys:String>
+    <sys:String x:Key="Duration_Seconds">{0} sec</sys:String>
+    <sys:String x:Key="Duration_Zero">0 sec</sys:String>
+    <sys:String x:Key="Focus_AwaySavedSeparately">No keyboard or mouse input detected. Away time is saved separately.</sys:String>
+    <sys:String x:Key="Focus_BestBlock">Best Focus Block</sys:String>
+    <sys:String x:Key="Focus_CurrentActivity">Current Activity</sys:String>
+    <sys:String x:Key="Focus_DashboardExcluded">ConcentrationPro is open. Session time continues, but dashboard time is not counted as focus work.</sys:String>
+    <sys:String x:Key="Focus_Interruptions">Interruptions</sys:String>
+    <sys:String x:Key="Focus_LastBlock">Last Focus Block</sys:String>
+    <sys:String x:Key="Focus_NoActiveApp">No active app yet</sys:String>
+    <sys:String x:Key="Focus_NoActiveWindow">No active window yet</sys:String>
+    <sys:String x:Key="Focus_Quality">Focus Quality</sys:String>
+    <sys:String x:Key="Focus_Score">Score</sys:String>
+    <sys:String x:Key="Focus_Stability">Focus Stability</sys:String>
+    <sys:String x:Key="Focus_Summary">Focus Summary</sys:String>
+    <sys:String x:Key="Focus_Title">Concentration Score</sys:String>
+    <sys:String x:Key="Grid_App">App</sys:String>
+    <sys:String x:Key="Grid_BreakReason">Break Reason</sys:String>
+    <sys:String x:Key="Grid_Category">Category</sys:String>
+    <sys:String x:Key="Grid_Disruptive">Disruptive</sys:String>
+    <sys:String x:Key="Grid_End">End</sys:String>
+    <sys:String x:Key="Grid_From">From</sys:String>
+    <sys:String x:Key="Grid_LastWindowTitle">Last Window Title</sys:String>
+    <sys:String x:Key="Grid_MainApp">Main App</sys:String>
+    <sys:String x:Key="Grid_Start">Start</sys:String>
+    <sys:String x:Key="Grid_Time">Time</sys:String>
+    <sys:String x:Key="Grid_To">To</sys:String>
+    <sys:String x:Key="Grid_WindowTitle">Window Title</sys:String>
+    <sys:String x:Key="Header_SessionTime">Session Time</sys:String>
+    <sys:String x:Key="History_ArchiveSubtitle">Open a snapshot to inspect timeline and switches</sys:String>
+    <sys:String x:Key="History_ArchiveTitle">Session Archive</sys:String>
+    <sys:String x:Key="History_Average">Average</sys:String>
+    <sys:String x:Key="History_AverageScore">Average Score</sys:String>
+    <sys:String x:Key="History_Best">Best</sys:String>
+    <sys:String x:Key="History_BestSavedFormat">{0} · score {1}%</sys:String>
+    <sys:String x:Key="History_BestScore">Best Score</sys:String>
+    <sys:String x:Key="History_ClearedStatus">Session history cleared.</sys:String>
+    <sys:String x:Key="History_DeletedStatus">Deleted selected session.</sys:String>
+    <sys:String x:Key="History_DistractionAffectedScore">Distraction time affected the final focus score.</sys:String>
+    <sys:String x:Key="History_Last">Last</sys:String>
+    <sys:String x:Key="History_LastSaved">Last Saved</sys:String>
+    <sys:String x:Key="History_LastSavedFormat">{0} · score {1}%</sys:String>
+    <sys:String x:Key="History_LoadedStatus">Loaded {0} saved sessions.</sys:String>
+    <sys:String x:Key="History_NeedSessionDelete">Select a session to delete.</sys:String>
+    <sys:String x:Key="History_NeedSessionOpen">Select a session to open details.</sys:String>
+    <sys:String x:Key="History_NoBest">No best session yet</sys:String>
+    <sys:String x:Key="History_NoSaved">No saved sessions yet</sys:String>
+    <sys:String x:Key="History_OpenStatus">Opened details for session: {0}.</sys:String>
+    <sys:String x:Key="History_SavedSessions">Saved Sessions</sys:String>
+    <sys:String x:Key="History_SavedStatus">Saved session: {0} · score {1}%.</sys:String>
+    <sys:String x:Key="History_ScoreTrend">Score Trend</sys:String>
+    <sys:String x:Key="History_ScoreTrendSubtitle">Latest saved scores</sys:String>
+    <sys:String x:Key="History_SessionSavedSuccessfully">Session saved successfully.</sys:String>
+    <sys:String x:Key="History_Sessions">Sessions</sys:String>
+    <sys:String x:Key="History_StartBeforeSave">Start a session before saving history.</sys:String>
+    <sys:String x:Key="History_StorageNote">Saved locally in SQLite. Sessions are archived when monitoring is paused or reset.</sys:String>
+    <sys:String x:Key="History_StoredLocal">Session history is stored in LocalAppData.</sys:String>
+    <sys:String x:Key="History_Subtitle">Saved sessions, progress trend and detailed snapshots</sys:String>
+    <sys:String x:Key="History_Summary">History Summary</sys:String>
+    <sys:String x:Key="History_Title">Focus Journal</sys:String>
+    <sys:String x:Key="History_TooShort">Session is too short to save.</sys:String>
+    <sys:String x:Key="Kpi_FocusStreak">Focus Streak</sys:String>
+    <sys:String x:Key="Kpi_ProductiveTime">Productive Time</sys:String>
+    <sys:String x:Key="Kpi_TotalSwitches">Total Switches</sys:String>
+    <sys:String x:Key="Kpi_TrackedTime">Tracked Time</sys:String>
+    <sys:String x:Key="Monitoring_Pause">Pause Monitoring</sys:String>
+    <sys:String x:Key="Monitoring_Reset">Reset Session</sys:String>
+    <sys:String x:Key="Monitoring_Start">Start Monitoring</sys:String>
+    <sys:String x:Key="Monitoring_StatusActive">Monitoring active</sys:String>
+    <sys:String x:Key="Monitoring_StatusAway">Monitoring active · away</sys:String>
+    <sys:String x:Key="Monitoring_StatusPaused">Monitoring paused</sys:String>
+    <sys:String x:Key="Monitoring_StatusViewingDashboard">Monitoring active · stats paused while you view them</sys:String>
+    <sys:String x:Key="Settings_DataStorageDescription">Settings and saved sessions are stored locally in SQLite.</sys:String>
+    <sys:String x:Key="Settings_DataStorageTitle">Data storage</sys:String>
+    <sys:String x:Key="Settings_DatabaseUnavailable">Database path is not available.</sys:String>
+    <sys:String x:Key="Settings_DefaultTab">Default dashboard tab</sys:String>
+    <sys:String x:Key="Settings_DefaultTabDescription">The first tab shown when ConcentrationPro opens.</sys:String>
+    <sys:String x:Key="Settings_DefaultsRestored">Default values restored in the form. Press Save to apply them.</sys:String>
+    <sys:String x:Key="Settings_IdleGrace">Idle grace, seconds</sys:String>
+    <sys:String x:Key="Settings_IdleGraceDescription">Small buffer before idle state affects focus metrics.</sys:String>
+    <sys:String x:Key="Settings_IdleGraceRange">Idle grace must be between 0 and 300 seconds.</sys:String>
+    <sys:String x:Key="Settings_IdleThreshold">Idle threshold, minutes</sys:String>
+    <sys:String x:Key="Settings_IdleThresholdDescription">After this time without input, the user is treated as AFK.</sys:String>
+    <sys:String x:Key="Settings_IdleThresholdRange">Idle threshold must be between 0.25 and 60 minutes.</sys:String>
+    <sys:String x:Key="Settings_InvalidIdleGrace">Idle grace must be a whole number of seconds.</sys:String>
+    <sys:String x:Key="Settings_InvalidIdleThreshold">Idle threshold must be a number. Example: 2 or 1.5.</sys:String>
+    <sys:String x:Key="Settings_MinimizeToTray">Minimize to tray instead of closing</sys:String>
+    <sys:String x:Key="Settings_MinimizeToTrayDescription">Pressing X hides the dashboard while tracking and tray controls keep working.</sys:String>
+    <sys:String x:Key="Settings_OpenFolder">Open folder</sys:String>
+    <sys:String x:Key="Settings_OpenFolderFailed">Could not open data folder: {0}</sys:String>
+    <sys:String x:Key="Settings_ResetDefaults">Reset defaults</sys:String>
+    <sys:String x:Key="Settings_Saved">Settings saved.</sys:String>
+    <sys:String x:Key="Settings_SavedStartupFailed">Settings saved, but Windows startup setting could not be changed.</sys:String>
+    <sys:String x:Key="Settings_StartMinimized">Start minimized to tray</sys:String>
+    <sys:String x:Key="Settings_StartMinimizedDescription">If the app starts with Windows, open it in the background instead of showing the dashboard.</sys:String>
+    <sys:String x:Key="Settings_StartWithWindows">Start with Windows</sys:String>
+    <sys:String x:Key="Settings_StartWithWindowsDescription">Add the app to the current user's Windows startup list.</sys:String>
+    <sys:String x:Key="Settings_StartupTrayDescription">Choose how ConcentrationPro opens and whether it continues working quietly in the background.</sys:String>
+    <sys:String x:Key="Settings_StartupTrayTitle">Startup and tray</sys:String>
+    <sys:String x:Key="Settings_StatusStored">Settings are stored in the local SQLite database.</sys:String>
+    <sys:String x:Key="Settings_StorageBadge">SQLite local storage</sys:String>
+    <sys:String x:Key="Settings_Subtitle">Configure startup behavior, tray mode, tracking sensitivity and local storage.</sys:String>
+    <sys:String x:Key="Settings_Title">Settings</sys:String>
+    <sys:String x:Key="Settings_TrackingSensitivityDescription">Tune AFK detection and the default dashboard tab.</sys:String>
+    <sys:String x:Key="Settings_TrackingSensitivityTitle">Tracking sensitivity</sys:String>
+    <sys:String x:Key="Settings_TrayNotification">Show tray notification</sys:String>
+    <sys:String x:Key="Settings_TrayNotificationDescription">Show a short Windows tray message when the app is hidden for the first time.</sys:String>
+    <sys:String x:Key="Settings_WindowTitle">ConcentrationPro Settings</sys:String>
+    <sys:String x:Key="Summary_ActivityBalance">Activity Balance</sys:String>
+    <sys:String x:Key="Summary_ActivityBalanceDescription">Tracked time split by work, distractions and away time</sys:String>
+    <sys:String x:Key="Summary_AwaySessions">Away Sessions</sys:String>
+    <sys:String x:Key="Summary_AwaySummary">Away Summary</sys:String>
+    <sys:String x:Key="Summary_AwayTime">Away Time</sys:String>
+    <sys:String x:Key="Summary_BrowserContextsDescription">Browser tabs are shown as separate contexts</sys:String>
+    <sys:String x:Key="Summary_DistractionContext">Distraction Context</sys:String>
+    <sys:String x:Key="Summary_FocusDiagnostics">Focus Diagnostics</sys:String>
+    <sys:String x:Key="Summary_FocusInsight">Focus Insight</sys:String>
+    <sys:String x:Key="Summary_Interruptions">Interruptions</sys:String>
+    <sys:String x:Key="Summary_Subtitle">Compact focus overview with browser-tab context</sys:String>
+    <sys:String x:Key="Summary_Title">Session Summary</sys:String>
+    <sys:String x:Key="Summary_WorkContext">Work Context</sys:String>
+    <sys:String x:Key="Tab_Categories">Categories</sys:String>
+    <sys:String x:Key="Tab_Charts">Charts</sys:String>
+    <sys:String x:Key="Tab_History">History</sys:String>
+    <sys:String x:Key="Tab_Summary">Summary</sys:String>
+    <sys:String x:Key="Tab_Timeline">Timeline</sys:String>
+    <sys:String x:Key="Timeline_Duration">Duration</sys:String>
+    <sys:String x:Key="Timeline_EmptySubtitle">As soon as you switch windows, activity will show up here.</sys:String>
+    <sys:String x:Key="Timeline_EmptyTitle">No activity yet</sys:String>
+    <sys:String x:Key="Timeline_LiveFeed">Live feed</sys:String>
+    <sys:String x:Key="Timeline_Subtitle">Live history of active applications and focus context</sys:String>
+    <sys:String x:Key="Timeline_Title">Activity Timeline</sys:String>
+    <sys:String x:Key="Tooltip_MaximizeRestore">Maximize / restore</sys:String>
+    <sys:String x:Key="Tooltip_Minimize">Minimize</sys:String>
+    <sys:String x:Key="Tooltip_OpenSettings">Open settings</sys:String>
+    <sys:String x:Key="Tooltip_SwitchLanguage">Switch interface language</sys:String>
+    <sys:String x:Key="Tooltip_SwitchTheme">Switch light/dark theme</sys:String>
+    <sys:String x:Key="Vm_AwayHigh">Away time is high for this session. Long away periods break focus continuity.</sys:String>
+    <sys:String x:Key="Vm_BalancedSession">Balanced session: keep reducing unnecessary switches to improve your score.</sys:String>
+    <sys:String x:Key="Vm_CleanSession">Clean session: no disruptive switches detected so far.</sys:String>
+    <sys:String x:Key="Vm_DashboardTitle">Dashboard</sys:String>
+    <sys:String x:Key="Vm_DistractionInsight">Most tracked time went to distracting or communication activity, mainly {0}.</sys:String>
+    <sys:String x:Key="Vm_DistractionInsightNoApp">Most tracked time went to distracting or communication activity.</sys:String>
+    <sys:String x:Key="Vm_NotEnoughActivityInsight">Not enough tracked activity yet. Keep working for at least a minute.</sys:String>
+    <sys:String x:Key="Vm_OpenSettingsFailed">Could not open settings: {0}</sys:String>
+    <sys:String x:Key="Vm_ProductiveInsight">Most tracked time went to productive activity, mainly {0}.</sys:String>
+    <sys:String x:Key="Vm_StableButLowProductive">Stable session, but not enough time was spent in productive apps.</sys:String>
+    <sys:String x:Key="Vm_StartMonitoringInsight">Start monitoring to see your focus insight.</sys:String>
+    <sys:String x:Key="Vm_StrongFocusSession">Strong focus session: long stable activity and very few disruptive switches.</sys:String>
+    <sys:String x:Key="Vm_SwitchDrop">Focus dropped mainly because of disruptive switches to communication or distraction apps.</sys:String>
+    <sys:String x:Key="Vm_TotalDisruptive">{0} total · {1} disruptive</sys:String>
+    <sys:String x:Key="Vm_UnstableFocus">Good work quality, but focus is unstable because of frequent context switching.</sys:String>
+    <sys:String x:Key="WindowSwitchingPanel_LegendSwitches">Window Switches</sys:String>
+    <sys:String x:Key="WindowSwitchingPanel_ScoreSubtitle">Correlation between window switching and concentration</sys:String>
+    <sys:String x:Key="WindowSwitchingPanel_Subtitle">Number of window switches per 5-minute interval</sys:String>
+
+    <sys:String x:Key="Timeline_StatusActive">Active</sys:String>
+
+    <sys:String x:Key="Timeline_StatusCompleted">Completed</sys:String>
+
+    <sys:String x:Key="Timeline_StatusPaused">Paused</sys:String>
+
+    <sys:String x:Key="Status_Completed">Completed</sys:String>
+
+    <sys:String x:Key="Status_ManualSave">Manual save</sys:String>
+
+    <sys:String x:Key="Status_Saved">Saved</sys:String>
+
+    <sys:String x:Key="Status_AutoSave">Auto save</sys:String>
+
+    <sys:String x:Key="ChartAxis_Switches">Switches</sys:String>
+
+    <sys:String x:Key="ChartAxis_ScorePercent">Score (%)</sys:String>
+
+    <sys:String x:Key="ChartSeries_NormalSwitches">Normal switches</sys:String>
+
+    <sys:String x:Key="ChartSeries_DisruptiveSwitches">Disruptive switches</sys:String>
+
+    <sys:String x:Key="ChartSeries_Score">Score</sys:String>
+
+    <sys:String x:Key="ChartSeries_ConcentrationScore">Concentration score</sys:String>
+
+    <sys:String x:Key="ChartTracker_NormalSwitches">{0}: {1} normal switches</sys:String>
+
+    <sys:String x:Key="ChartTracker_DisruptiveSwitches">{0}: {1} disruptive switches</sys:String>
+
+    <sys:String x:Key="ChartTracker_ConcentrationScore">{0}: score {1}%</sys:String>
+
+    <sys:String x:Key="ChartTracker_SessionScore">{0}: score {1}%</sys:String>
+
+    <sys:String x:Key="History_BestFocusFormat">Best focus: {0}</sys:String>
+
+    <sys:String x:Key="Focus_DashboardAppName">Dashboard</sys:String>
+
+    <sys:String x:Key="Focus_IdleAppName">Idle</sys:String>
+
+    <sys:String x:Key="Common_UnknownApp">Unknown</sys:String>
+
+    <sys:String x:Key="Common_UntitledWindow">Untitled Window</sys:String>
+
+    <sys:String x:Key="History_InitialStatus">Session history is stored locally in LocalAppData.</sys:String>
+
+    <sys:String x:Key="Categories_InitialStatus">Rules are loaded from LocalAppData.</sys:String>
+
+    <sys:String x:Key="History_SavedSessionStatus">Saved session: {0} · score {1}%.</sys:String>
+
+    <sys:String x:Key="Vm_StartWorkingInsight">Start working in another application to collect focus data.</sys:String>
+
+    <sys:String x:Key="Vm_DistractionInsightWithApp">Most tracked time went to distracting or communication activity, mainly {0}.</sys:String>
+
+    <sys:String x:Key="Vm_MainInterrupter">Main focus interrupter: {0}. Try closing or muting it during deep work.</sys:String>
+
+    <sys:String x:Key="AwaySummary_Format">{0} · away periods: {1}</sys:String>
+
+    <sys:String x:Key="History_LabelDuration">Duration</sys:String>
+
+    <sys:String x:Key="History_LabelProductive">Work</sys:String>
+
+    <sys:String x:Key="History_LabelDistraction">Distraction</sys:String>
+
+    <sys:String x:Key="History_LabelSwitches">Switches</sys:String>
+
+    <sys:String x:Key="Timeline_StatusActiveNow">Active now</sys:String>
+
+    <sys:String x:Key="Common_Yes">Yes</sys:String>
+
+    <sys:String x:Key="Common_No">No</sys:String>
+
+    <sys:String x:Key="Details_BreakReasonWindowSwitch">Window switch</sys:String>
+
+    <sys:String x:Key="Details_BreakReasonAway">User inactive</sys:String>
+
+    <sys:String x:Key="Details_BreakReasonSessionEnded">Session ended</sys:String>
+
+    <sys:String x:Key="History_OpenDetails">Details</sys:String>
+
+</ResourceDictionary>

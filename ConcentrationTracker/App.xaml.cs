@@ -1,17 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
+using ConcentrationTracker.Core.Database;
+using ConcentrationTracker.Core.Services;
+using ConcentrationTracker.MVVM.Model;
 using System.Windows;
 
 namespace ConcentrationTracker
 {
-    /// <summary>
-    /// Interaction logic for App.xaml
-    /// </summary>
     public partial class App : Application
     {
+        protected override void OnStartup(
+            StartupEventArgs e)
+        {
+            DatabaseInitializer.Initialize();
+
+            AppSettingsModel settings =
+                AppSettingsService.LoadSettings();
+
+            LocalizationService.ApplyLanguage(
+                settings.InterfaceLanguage,
+                false);
+
+            base.OnStartup(
+                e);
+        }
     }
 }
