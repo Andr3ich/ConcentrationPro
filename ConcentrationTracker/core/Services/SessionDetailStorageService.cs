@@ -12,8 +12,6 @@ namespace ConcentrationTracker.Core.Services
         public void SaveDetails(
             string sessionId,
             IEnumerable<ActivityEventModel> activityEvents,
-            IEnumerable<object> switchEvents,
-            IEnumerable<FocusBlockModel> focusBlocks,
             DateTime now)
         {
             if (string.IsNullOrWhiteSpace(sessionId))

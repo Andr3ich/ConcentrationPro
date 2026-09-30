@@ -1975,10 +1975,12 @@ namespace ConcentrationTracker.MVVM.ViewModel
             if (_currentFocusBlock == null)
                 return;
 
-            if (!_currentFocusBlock.IsActive)
+            if (!_currentFocusBlock.IsActive && !_currentFocusBlock.IsSuspended)
                 return;
 
-            _currentFocusBlock.PauseSegment(suspendTime);
+            if (_currentFocusBlock.IsActive)
+                _currentFocusBlock.PauseSegment(suspendTime);
+
             _focusSuspendedAt = suspendTime;
             _focusSuspensionReason = reason;
             RefreshCalculatedProperties();
@@ -2026,14 +2028,7 @@ namespace ConcentrationTracker.MVVM.ViewModel
             if (_currentFocusBlock == null)
                 return TimeSpan.Zero;
 
-            TimeSpan duration = _currentFocusBlock.CurrentDuration;
-            TimeSpan pendingIdle = GetPendingIdleDuration();
-            duration -= pendingIdle;
-
-            if (duration.TotalSeconds < 0)
-                return TimeSpan.Zero;
-
-            return duration;
+            return _currentFocusBlock.CurrentDuration;
         }
 
         private TimeSpan GetFocusBlockDurationForDisplay(FocusBlockModel focusBlock)
@@ -2208,14 +2203,6 @@ namespace ConcentrationTracker.MVVM.ViewModel
                 return TimeSpan.Zero;
 
             return result;
-        }
-
-        private TimeSpan GetPendingIdleDuration()
-        {
-            if (!IsMonitoring || IsIdle)
-                return TimeSpan.Zero;
-
-            return _idleDetectionService.GetIdleTime();
         }
 
         private DateTime GetMetricsNow()

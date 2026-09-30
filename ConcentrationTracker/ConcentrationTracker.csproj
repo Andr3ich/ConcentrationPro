@@ -298,7 +298,6 @@
     <Compile Include="core\Converters\ProcessPathToIconConverter.cs" />
     <Compile Include="core\Converters\ScorePointsToPointCollectionConverter.cs" />
     <Compile Include="core\Converters\ScorePointsToSmoothPathConverter.cs" />
-    <Compile Include="core\Converters\ScoreToArcGeometryConverter.cs" />
     <Compile Include="core\Converters\ScoreTierConverter.cs" />
     <Compile Include="core\Converters\WindowTitleCleanerConverter.cs" />
     <Compile Include="core\Services\ActivityAnalyticsService.cs" />

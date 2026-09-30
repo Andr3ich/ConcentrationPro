@@ -91,7 +91,8 @@ namespace ConcentrationTracker.Core.Converters
             }
 
             if (normalized == "window switch" ||
-                normalized == "switch")
+                normalized == "switch" ||
+                normalized == "context changed")
             {
                 return LocalizationService.GetString(
                     "Details_BreakReasonWindowSwitch");
@@ -105,7 +106,8 @@ namespace ConcentrationTracker.Core.Converters
             }
 
             if (normalized == "session ended" ||
-                normalized == "session end")
+                normalized == "session end" ||
+                normalized == "saved session end")
             {
                 return LocalizationService.GetString(
                     "Details_BreakReasonSessionEnded");

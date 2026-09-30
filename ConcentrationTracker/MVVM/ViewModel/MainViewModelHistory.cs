@@ -59,8 +59,6 @@ namespace ConcentrationTracker.MVVM.ViewModel
             _sessionDetailStorageService.SaveDetails(
                 record.SessionId,
                 ActivityEvents.ToList(),
-                _switchEvents.Cast<object>().ToList(),
-                FocusBlocks.ToList(),
                 GetMetricsNow());
 
             LoadSessionHistory();

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -10,11 +11,19 @@ namespace ConcentrationTracker.Core.Services
             Encoding.UTF8.GetBytes("ConcentrationPro.WindowTitle.v1");
 
         private const string ProtectedPrefix = "dp1:";
+        private const string UnprotectedFallbackPrefix = "raw1:";
+
+        private static bool _protectionUnavailable;
+
+        public static bool IsProtectionAvailable => !_protectionUnavailable;
 
         public static string Protect(string plainText)
         {
             if (string.IsNullOrEmpty(plainText))
                 return plainText ?? string.Empty;
+
+            if (_protectionUnavailable)
+                return UnprotectedFallbackPrefix + plainText;
 
             try
             {
@@ -29,9 +38,15 @@ namespace ConcentrationTracker.Core.Services
 
                 return ProtectedPrefix + Convert.ToBase64String(protectedBytes);
             }
-            catch
+            catch (Exception ex)
             {
-                return plainText;
+                _protectionUnavailable = true;
+
+                Debug.WriteLine(
+                    "DataProtectionService: ProtectedData.Protect failed, falling back to explicitly-marked unprotected storage for the rest of this session. " +
+                    ex.Message);
+
+                return UnprotectedFallbackPrefix + plainText;
             }
         }
 
@@ -39,6 +54,11 @@ namespace ConcentrationTracker.Core.Services
         {
             if (string.IsNullOrEmpty(storedValue))
                 return storedValue ?? string.Empty;
+
+            if (storedValue.StartsWith(UnprotectedFallbackPrefix, StringComparison.Ordinal))
+            {
+                return storedValue.Substring(UnprotectedFallbackPrefix.Length);
+            }
 
             if (!storedValue.StartsWith(ProtectedPrefix, StringComparison.Ordinal))
             {

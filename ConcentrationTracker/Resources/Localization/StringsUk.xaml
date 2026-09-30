@@ -203,7 +203,7 @@
     <sys:String x:Key="Summary_DistractionContext">Контекст відволікання</sys:String>
     <sys:String x:Key="Summary_FocusDiagnostics">Діагностика фокусу</sys:String>
     <sys:String x:Key="Summary_FocusInsight">Висновок щодо фокусу</sys:String>
-    <sys:String x:Key="Summary_Interruptions">Переривання</sys:String>
+    <sys:String x:Key="Summary_DisruptiveSwitches">Відволікаючі перемикання</sys:String>
     <sys:String x:Key="Summary_Subtitle">Короткий огляд фокусу з урахуванням вкладок браузера</sys:String>
     <sys:String x:Key="Summary_Title">Підсумок сесії</sys:String>
     <sys:String x:Key="Summary_WorkContext">Робочий контекст</sys:String>

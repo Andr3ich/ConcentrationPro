@@ -124,7 +124,7 @@ namespace ConcentrationTracker.Core.Services
 
             if (ContainsAny(title,
                     "settings", "параметри", "налаштування", "task manager", "диспетчер завдань",
-                    "windows security", "безпека windows", "snipping tool", "засіб захоплення", "пошук", "search"))
+                    "windows security", "безпека windows", "snipping tool", "засіб захоплення"))
             {
                 return true;
             }

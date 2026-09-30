@@ -91,7 +91,7 @@ namespace ConcentrationTracker.Core.Services
                 {
                     command.CommandText =
                         @"
-                        INSERT OR REPLACE INTO Sessions
+                        INSERT INTO Sessions
                         (
                             SessionId,
                             ProfileId,
@@ -108,7 +108,13 @@ namespace ConcentrationTracker.Core.Services
                             @SessionEndedAt,
                             @SessionState,
                             @SessionRecordedAt
-                        );";
+                        )
+                        ON CONFLICT(SessionId) DO UPDATE SET
+                            ProfileId = excluded.ProfileId,
+                            SessionStartedAt = excluded.SessionStartedAt,
+                            SessionEndedAt = excluded.SessionEndedAt,
+                            SessionState = excluded.SessionState,
+                            SessionRecordedAt = excluded.SessionRecordedAt;";
 
                     command.Parameters.AddWithValue("@SessionId", SafeText(session.SessionId));
                     command.Parameters.AddWithValue("@ProfileId", profileId);
@@ -173,7 +179,7 @@ namespace ConcentrationTracker.Core.Services
             double afkSeconds = SumCategory(rows, "Away") + SumCategory(rows, "AFK");
             double trackedSeconds = Math.Max(0, rows.Sum(x => x.DurationSeconds) - afkSeconds);
 
-            int totalSwitches = Math.Max(0, rows.Count - 1);
+            int totalSwitches = CountTransitions(rows);
             int disruptiveSwitches = CountDisruptiveSwitches(rows);
             int interruptions = disruptiveSwitches;
             int idleBreaks = rows.Count(x => IsCategory(x.CategoryName, "Away") || IsCategory(x.CategoryName, "AFK"));
@@ -270,11 +276,31 @@ namespace ConcentrationTracker.Core.Services
             return string.Equals(value, categoryName, StringComparison.OrdinalIgnoreCase);
         }
 
+        private bool IsSameActivity(ActivityAggregateRow previous, ActivityAggregateRow current)
+        {
+            return IsCategory(previous.CategoryName, current.CategoryName) &&
+                   string.Equals(previous.AppName, current.AppName, StringComparison.OrdinalIgnoreCase);
+        }
+
+        private int CountTransitions(List<ActivityAggregateRow> rows)
+        {
+            int count = 0;
+            for (int i = 1; i < rows.Count; i++)
+            {
+                if (!IsSameActivity(rows[i - 1], rows[i]))
+                    count++;
+            }
+            return count;
+        }
+
         private int CountDisruptiveSwitches(List<ActivityAggregateRow> rows)
         {
             int count = 0;
             for (int i = 1; i < rows.Count; i++)
             {
+                if (IsSameActivity(rows[i - 1], rows[i]))
+                    continue;
+
                 if (IsCategory(rows[i].CategoryName, AppCategory.Distraction.ToString()))
                     count++;
             }

@@ -221,13 +221,20 @@ namespace ConcentrationTracker.Core.Services
             if (recentEvents.Count == 0)
                 return 100;
 
+            List<ActivityEventModel> substantialEvents =
+                recentEvents
+                    .Where(x =>
+                        GetActivityDurationInsideWindow(x, windowStart, now).TotalSeconds
+                            >= ShortEventThresholdSeconds)
+                    .ToList();
+
             int recentWindowTransitions =
                 Math.Max(
                     0,
-                    recentEvents.Count - 1);
+                    substantialEvents.Count - 1);
 
             int disruptiveEvents =
-                recentEvents.Count(x =>
+                substantialEvents.Count(x =>
                     x.Category == AppCategory.Distraction ||
                     x.Category == AppCategory.Communication);
 

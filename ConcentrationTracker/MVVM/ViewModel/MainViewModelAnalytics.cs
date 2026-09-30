@@ -198,9 +198,6 @@ namespace ConcentrationTracker.MVVM.ViewModel
 
         private int GetDisruptiveSwitchCount()
         {
-            if (_switchEvents.Count > 0)
-                return _switchEvents.Count(x => x.IsDisruptive);
-
             List<ActivityEventModel> disruptiveEntries =
                 GetDisruptiveEntryEvents();
 

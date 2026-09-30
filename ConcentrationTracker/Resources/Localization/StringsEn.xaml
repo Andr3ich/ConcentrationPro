@@ -203,7 +203,7 @@
     <sys:String x:Key="Summary_DistractionContext">Distraction Context</sys:String>
     <sys:String x:Key="Summary_FocusDiagnostics">Focus Diagnostics</sys:String>
     <sys:String x:Key="Summary_FocusInsight">Focus Insight</sys:String>
-    <sys:String x:Key="Summary_Interruptions">Interruptions</sys:String>
+    <sys:String x:Key="Summary_DisruptiveSwitches">Disruptive Switches</sys:String>
     <sys:String x:Key="Summary_Subtitle">Compact focus overview with browser-tab context</sys:String>
     <sys:String x:Key="Summary_Title">Session Summary</sys:String>
     <sys:String x:Key="Summary_WorkContext">Work Context</sys:String>
