@@ -144,7 +144,6 @@ namespace ConcentrationTracker.Tests
             };
 
             int result = _service.CalculateFocusStabilityPercent(
-                totalSwitches: 1,
                 activityEvents: events,
                 trackedElapsed: TimeSpan.FromMinutes(30),
                 now: now);
@@ -180,7 +179,6 @@ namespace ConcentrationTracker.Tests
             };
 
             int result = _service.CalculateConcentrationScore(
-                totalSwitches: 3,
                 activityEvents: events,
                 focusBlocks: new List<FocusBlockModel>(),
                 trackedElapsed: TimeSpan.FromMinutes(30),

@@ -706,7 +706,6 @@ namespace ConcentrationTracker.MVVM.ViewModel
                 return 0;
 
             return _metricsService.CalculateFocusStabilityPercent(
-                TotalSwitches,
                 ActivityEvents,
                 trackedElapsed,
                 GetMetricsNow());

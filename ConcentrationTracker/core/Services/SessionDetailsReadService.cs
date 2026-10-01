@@ -9,6 +9,8 @@ namespace ConcentrationTracker.Core.Services
 {
     public class SessionDetailsReadService
     {
+        private readonly FocusBlockReconstructionService _focusBlockReconstructionService = new FocusBlockReconstructionService();
+
         private class ActivityRow
         {
             public string AppName { get; set; }
@@ -67,7 +69,7 @@ namespace ConcentrationTracker.Core.Services
                     {
                         DateTime startTime = ParseDateTime(GetString(reader, "ActivityStartedAt"), DateTime.Now);
                         DateTime? endTime = ParseNullableDateTime(GetString(reader, "ActivityEndedAt"));
-                        DateTime finishTime = endTime ?? DateTime.Now;
+                        DateTime finishTime = endTime ?? startTime;
                         double durationSeconds = Math.Max(0, (finishTime - startTime).TotalSeconds);
 
                         rows.Add(new ActivityRow
@@ -134,55 +136,66 @@ namespace ConcentrationTracker.Core.Services
 
         private void FillFocusBlocks(SessionDetailsModel details, List<ActivityRow> rows)
         {
-            List<ActivityRow> focusRows = rows.Where(x => IsFocusCategory(x.Category)).ToList();
-            if (focusRows.Count == 0)
-                return;
+            List<ActivityEventModel> events = new List<ActivityEventModel>();
 
-            ActivityRow blockStart = focusRows[0];
-            ActivityRow blockEnd = focusRows[0];
-
-            for (int index = 1; index < focusRows.Count; index++)
+            foreach (ActivityRow row in rows)
             {
-                ActivityRow current = focusRows[index];
-                bool sameApp = string.Equals(blockEnd.AppName, current.AppName, StringComparison.OrdinalIgnoreCase);
-                DateTime previousEnd = blockEnd.EndTime ?? blockEnd.StartTime;
-                double gapSeconds = Math.Abs((current.StartTime - previousEnd).TotalSeconds);
+                AppCategory category;
 
-                if (sameApp && gapSeconds <= 30)
-                {
-                    blockEnd = current;
+                if (!Enum.TryParse(row.Category, true, out category))
                     continue;
-                }
 
-                AddFocusBlock(details, blockStart, blockEnd, "Context changed");
-                blockStart = current;
-                blockEnd = current;
+                events.Add(new ActivityEventModel
+                {
+                    AppName = row.AppName,
+                    WindowTitle = row.WindowTitle,
+                    Category = category,
+                    StartTime = row.StartTime,
+                    EndTime = row.EndTime
+                });
             }
 
-            AddFocusBlock(details, blockStart, blockEnd, "Saved session end");
-        }
+            if (events.Count == 0)
+                return;
 
-        private void AddFocusBlock(SessionDetailsModel details, ActivityRow start, ActivityRow end, string breakReason)
-        {
-            DateTime endTime = end.EndTime ?? end.StartTime;
-            double seconds = Math.Max(0, (endTime - start.StartTime).TotalSeconds);
+            DateTime sessionEnd = events.Max(x => x.EndTime ?? x.StartTime);
 
-            details.FocusBlocks.Add(new SessionDetailFocusBlockModel
+            FocusBlockReconstructionResult result =
+                _focusBlockReconstructionService.Reconstruct(events, sessionEnd);
+
+            foreach (FocusBlockModel block in result.FocusBlocks)
             {
-                MainApp = start.AppName,
-                LastWindowTitle = end.WindowTitle,
-                Category = start.Category,
-                StartText = FormatDateTime(start.StartTime),
-                EndText = end.EndTime.HasValue ? FormatDateTime(end.EndTime.Value) : "-",
-                DurationText = FormatDuration(seconds),
-                BreakReason = breakReason
-            });
+                details.FocusBlocks.Add(new SessionDetailFocusBlockModel
+                {
+                    MainApp = block.MainApp,
+                    LastWindowTitle = block.LastWindowTitle,
+                    Category = block.Category.ToString(),
+                    StartText = FormatDateTime(block.StartTime),
+                    EndText = block.EndTime.HasValue ? FormatDateTime(block.EndTime.Value) : "-",
+                    DurationText = FormatDuration(block.AccumulatedDuration.TotalSeconds),
+                    BreakReason = GetBreakReasonText(block.BreakReason)
+                });
+            }
         }
 
-        private bool IsFocusCategory(string category)
+        private string GetBreakReasonText(FocusBreakReason reason)
         {
-            return string.Equals(category, AppCategory.Productive.ToString(), StringComparison.OrdinalIgnoreCase) ||
-                   string.Equals(category, AppCategory.Neutral.ToString(), StringComparison.OrdinalIgnoreCase);
+            switch (reason)
+            {
+                case FocusBreakReason.ContextChanged:
+                    return "Context changed";
+                case FocusBreakReason.Idle:
+                    return "Idle";
+                case FocusBreakReason.SessionPaused:
+                case FocusBreakReason.SessionReset:
+                    return "Saved session end";
+                case FocusBreakReason.Distraction:
+                    return "Distraction";
+                case FocusBreakReason.Communication:
+                    return "Communication";
+                default:
+                    return string.Empty;
+            }
         }
 
         private string GetString(SQLiteDataReader reader, string columnName)

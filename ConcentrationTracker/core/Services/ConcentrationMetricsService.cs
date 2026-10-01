@@ -68,7 +68,6 @@ namespace ConcentrationTracker.Core.Services
         }
 
         public int CalculateConcentrationScore(
-            int totalSwitches,
             IEnumerable<ActivityEventModel> activityEvents,
             IEnumerable<FocusBlockModel> focusBlocks,
             TimeSpan trackedElapsed,
@@ -94,7 +93,6 @@ namespace ConcentrationTracker.Core.Services
 
             int focusStability =
                 CalculateFocusStabilityPercent(
-                    totalSwitches,
                     activityEvents,
                     trackedElapsed,
                     now);
@@ -193,7 +191,6 @@ namespace ConcentrationTracker.Core.Services
         }
 
         public int CalculateFocusStabilityPercent(
-            int totalSwitches,
             IEnumerable<ActivityEventModel> activityEvents,
             TimeSpan trackedElapsed,
             DateTime now)

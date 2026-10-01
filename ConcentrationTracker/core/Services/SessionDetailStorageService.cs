@@ -85,7 +85,7 @@ namespace ConcentrationTracker.Core.Services
                         DataProtectionService.Protect(SafeText(activityEvent.WindowTitle)));
 
                     command.Parameters.AddWithValue("@ActivityStartedAt", activityEvent.StartTime.ToString("o"));
-                    command.Parameters.AddWithValue("@ActivityEndedAt", activityEvent.EndTime.HasValue ? (object)activityEvent.EndTime.Value.ToString("o") : DBNull.Value);
+                    command.Parameters.AddWithValue("@ActivityEndedAt", (activityEvent.EndTime ?? now).ToString("o"));
                     command.ExecuteNonQuery();
                 }
             }

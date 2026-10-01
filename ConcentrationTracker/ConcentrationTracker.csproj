@@ -244,10 +244,12 @@
     <Compile Include="core\Services\AppStartupService.cs" />
     <Compile Include="core\Services\ConcentrationMetricsService.cs" />
     <Compile Include="core\Services\DataProtectionService.cs" />
+    <Compile Include="core\Services\FocusBlockReconstructionService.cs" />
     <Compile Include="core\Services\LocalizationService.cs" />
     <Compile Include="core\Services\SessionDetailsReadService.cs" />
     <Compile Include="core\Services\SessionDetailStorageService.cs" />
     <Compile Include="core\Services\SessionHistoryStorageService.cs" />
+    <Compile Include="core\Services\SessionMetricsSnapshot.cs" />
     <Compile Include="core\Services\ThemeService.cs" />
     <Compile Include="core\Services\WindowTrackingService.cs" />
     <Compile Include="MVVM\model\ActiveWindowInfo.cs" />

@@ -81,6 +81,7 @@ namespace ConcentrationTracker.Core.Database
 
                     SessionState TEXT NOT NULL,
                     SessionRecordedAt TEXT NOT NULL,
+                    SessionMetrics TEXT,
 
                     FOREIGN KEY(ProfileId) REFERENCES Profiles(ProfileId)
                         ON UPDATE CASCADE
@@ -88,6 +89,42 @@ namespace ConcentrationTracker.Core.Database
 
                     CHECK (SessionState IN ('Active', 'Paused', 'Saved', 'Reset'))
                 );");
+
+            EnsureColumn(
+                connection,
+                "Sessions",
+                "SessionMetrics",
+                "TEXT");
+        }
+
+        private void EnsureColumn(
+            SQLiteConnection connection,
+            string tableName,
+            string columnName,
+            string columnDefinition)
+        {
+            using (SQLiteCommand command = connection.CreateCommand())
+            {
+                command.CommandText = "PRAGMA table_info(" + tableName + ");";
+
+                using (SQLiteDataReader reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        if (string.Equals(
+                                Convert.ToString(reader["name"]),
+                                columnName,
+                                StringComparison.OrdinalIgnoreCase))
+                        {
+                            return;
+                        }
+                    }
+                }
+            }
+
+            ExecuteNonQuery(
+                connection,
+                "ALTER TABLE " + tableName + " ADD COLUMN " + columnName + " " + columnDefinition + ";");
         }
 
         private void CreateApplicationsTable(

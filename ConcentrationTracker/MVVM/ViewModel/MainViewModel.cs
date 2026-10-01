@@ -933,7 +933,6 @@ namespace ConcentrationTracker.MVVM.ViewModel
                     return "0";
 
                 int score = _metricsService.CalculateConcentrationScore(
-                    TotalSwitches,
                     ActivityEvents,
                     FocusBlocks,
                     trackedElapsed,
@@ -2094,6 +2093,16 @@ namespace ConcentrationTracker.MVVM.ViewModel
                 !IsBrowserAppName(activeWindow.AppName))
             {
                 return fallbackCategory;
+            }
+
+            AppCategory userRuleCategory;
+
+            if (_categoryRuleService.TryClassify(
+                    activeWindow.AppName,
+                    activeWindow.WindowTitle,
+                    out userRuleCategory))
+            {
+                return userRuleCategory;
             }
 
             string title =

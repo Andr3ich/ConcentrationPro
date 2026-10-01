@@ -13,6 +13,8 @@ namespace ConcentrationTracker.Core.Services
     public class SessionHistoryStorageService
     {
         private readonly string _legacyXmlPath;
+        private readonly ConcentrationMetricsService _metricsService = new ConcentrationMetricsService();
+        private readonly FocusBlockReconstructionService _focusBlockReconstructionService = new FocusBlockReconstructionService();
 
         private class ActivityAggregateRow
         {
@@ -25,7 +27,7 @@ namespace ConcentrationTracker.Core.Services
             {
                 get
                 {
-                    DateTime finishTime = EndTime ?? DateTime.Now;
+                    DateTime finishTime = EndTime ?? StartTime;
                     return Math.Max(0, (finishTime - StartTime).TotalSeconds);
                 }
             }
@@ -56,7 +58,8 @@ namespace ConcentrationTracker.Core.Services
                             SessionId,
                             SessionStartedAt,
                             SessionEndedAt,
-                            SessionState
+                            SessionState,
+                            SessionMetrics
                         FROM Sessions
                         WHERE ProfileId = @ProfileId
                         ORDER BY SessionStartedAt DESC;";
@@ -98,7 +101,8 @@ namespace ConcentrationTracker.Core.Services
                             SessionStartedAt,
                             SessionEndedAt,
                             SessionState,
-                            SessionRecordedAt
+                            SessionRecordedAt,
+                            SessionMetrics
                         )
                         VALUES
                         (
@@ -107,14 +111,16 @@ namespace ConcentrationTracker.Core.Services
                             @SessionStartedAt,
                             @SessionEndedAt,
                             @SessionState,
-                            @SessionRecordedAt
+                            @SessionRecordedAt,
+                            @SessionMetrics
                         )
                         ON CONFLICT(SessionId) DO UPDATE SET
                             ProfileId = excluded.ProfileId,
                             SessionStartedAt = excluded.SessionStartedAt,
                             SessionEndedAt = excluded.SessionEndedAt,
                             SessionState = excluded.SessionState,
-                            SessionRecordedAt = excluded.SessionRecordedAt;";
+                            SessionRecordedAt = excluded.SessionRecordedAt,
+                            SessionMetrics = excluded.SessionMetrics;";
 
                     command.Parameters.AddWithValue("@SessionId", SafeText(session.SessionId));
                     command.Parameters.AddWithValue("@ProfileId", profileId);
@@ -122,6 +128,7 @@ namespace ConcentrationTracker.Core.Services
                     command.Parameters.AddWithValue("@SessionEndedAt", session.EndedAt == DateTime.MinValue ? (object)DBNull.Value : session.EndedAt.ToString("o"));
                     command.Parameters.AddWithValue("@SessionState", NormalizeSessionState(session.Status));
                     command.Parameters.AddWithValue("@SessionRecordedAt", DateTime.Now.ToString("o"));
+                    command.Parameters.AddWithValue("@SessionMetrics", SessionMetricsSnapshot.Serialize(session));
                     command.ExecuteNonQuery();
                 }
             }
@@ -166,64 +173,110 @@ namespace ConcentrationTracker.Core.Services
             DateTime startedAt = GetDateTime(reader, "SessionStartedAt");
             DateTime endedAt = GetDateTimeOrDefault(reader, "SessionEndedAt");
             string sessionState = GetString(reader, "SessionState");
+            string storedMetrics = GetString(reader, "SessionMetrics");
 
             List<ActivityAggregateRow> rows = LoadActivityRows(connection, sessionId);
 
-            DateTime finishTime = endedAt == DateTime.MinValue ? DateTime.Now : endedAt;
-            double sessionSeconds = Math.Max(0, (finishTime - startedAt).TotalSeconds);
+            DateTime finishTime = endedAt == DateTime.MinValue
+                ? rows.Select(x => x.EndTime ?? x.StartTime).DefaultIfEmpty(startedAt).Max()
+                : endedAt;
 
-            double productiveSeconds = SumCategory(rows, AppCategory.Productive.ToString());
-            double neutralSeconds = SumCategory(rows, AppCategory.Neutral.ToString());
-            double communicationSeconds = SumCategory(rows, AppCategory.Communication.ToString());
-            double distractionSeconds = SumCategory(rows, AppCategory.Distraction.ToString());
+            foreach (ActivityAggregateRow row in rows)
+            {
+                if (!row.EndTime.HasValue)
+                    row.EndTime = finishTime > row.StartTime ? finishTime : row.StartTime;
+            }
+
             double afkSeconds = SumCategory(rows, "Away") + SumCategory(rows, "AFK");
-            double trackedSeconds = Math.Max(0, rows.Sum(x => x.DurationSeconds) - afkSeconds);
 
-            int totalSwitches = CountTransitions(rows);
-            int disruptiveSwitches = CountDisruptiveSwitches(rows);
-            int interruptions = disruptiveSwitches;
-            int idleBreaks = rows.Count(x => IsCategory(x.CategoryName, "Away") || IsCategory(x.CategoryName, "AFK"));
-
-            int focusQuality = CalculatePercentage(productiveSeconds + neutralSeconds, trackedSeconds);
-            int focusStability = ClampScore(100 - disruptiveSwitches * 8);
-            int concentrationScore = CalculateConcentrationScore(focusQuality, focusStability, distractionSeconds, trackedSeconds);
-
-            string mostUsedApp = GetTopApp(rows, null);
-            string mainWorkContext = GetTopApp(rows, new[] { AppCategory.Productive.ToString(), AppCategory.Neutral.ToString() });
-            string topDistraction = GetTopApp(rows, new[] { AppCategory.Distraction.ToString() });
-
-            return new SessionRecordModel
+            SessionRecordModel session = new SessionRecordModel
             {
                 SessionId = sessionId,
                 StartedAt = startedAt,
                 EndedAt = endedAt,
                 Status = sessionState,
 
-                ConcentrationScore = concentrationScore,
-                FocusQuality = focusQuality,
-                FocusStability = focusStability,
-
-                TotalSwitches = totalSwitches,
-                DisruptiveSwitches = disruptiveSwitches,
-                Interruptions = interruptions,
-                IdleBreaks = idleBreaks,
-
-                SessionSeconds = sessionSeconds,
-                TrackedSeconds = trackedSeconds,
+                SessionSeconds = Math.Max(0, (finishTime - startedAt).TotalSeconds),
                 AfkSeconds = afkSeconds,
-                BestFocusBlockSeconds = GetBestFocusBlockSeconds(rows),
+                IdleBreaks = rows.Count(x => IsCategory(x.CategoryName, "Away") || IsCategory(x.CategoryName, "AFK")),
 
-                ProductiveSeconds = productiveSeconds,
-                NeutralSeconds = neutralSeconds,
-                CommunicationSeconds = communicationSeconds,
-                DistractionSeconds = distractionSeconds,
+                ProductiveSeconds = SumCategory(rows, AppCategory.Productive.ToString()),
+                NeutralSeconds = SumCategory(rows, AppCategory.Neutral.ToString()),
+                CommunicationSeconds = SumCategory(rows, AppCategory.Communication.ToString()),
+                DistractionSeconds = SumCategory(rows, AppCategory.Distraction.ToString()),
 
-                MostUsedApp = mostUsedApp,
-                MainWorkContext = mainWorkContext,
-                TopDistraction = topDistraction,
-                TopInterrupter = topDistraction,
-                Insight = BuildInsight(concentrationScore, disruptiveSwitches, distractionSeconds)
+                MostUsedApp = GetTopApp(rows, null),
+                MainWorkContext = GetTopApp(rows, new[] { AppCategory.Productive.ToString(), AppCategory.Neutral.ToString() }),
+                TopDistraction = GetTopApp(rows, new[] { AppCategory.Distraction.ToString() })
             };
+
+            session.TopInterrupter = session.TopDistraction;
+
+            if (!SessionMetricsSnapshot.TryApply(storedMetrics, session))
+                ApplyCalculatedMetrics(session, rows, finishTime);
+
+            session.Insight = BuildInsight(session.ConcentrationScore, session.DisruptiveSwitches, session.DistractionSeconds);
+
+            return session;
+        }
+
+        private void ApplyCalculatedMetrics(
+            SessionRecordModel session,
+            List<ActivityAggregateRow> rows,
+            DateTime finishTime)
+        {
+            List<ActivityEventModel> events = new List<ActivityEventModel>();
+
+            foreach (ActivityAggregateRow row in rows)
+            {
+                AppCategory category;
+
+                if (!Enum.TryParse(row.CategoryName, true, out category))
+                    continue;
+
+                events.Add(new ActivityEventModel
+                {
+                    AppName = row.AppName,
+                    Category = category,
+                    StartTime = row.StartTime,
+                    EndTime = row.EndTime
+                });
+            }
+
+            DateTime metricsNow = events.Count == 0
+                ? finishTime
+                : events.Max(x => x.EndTime ?? x.StartTime);
+
+            TimeSpan trackedElapsed = TimeSpan.FromSeconds(
+                events.Sum(x => Math.Max(0, ((x.EndTime ?? x.StartTime) - x.StartTime).TotalSeconds)));
+
+            FocusBlockReconstructionResult focus =
+                _focusBlockReconstructionService.Reconstruct(events, metricsNow);
+
+            session.FocusQuality = _metricsService.CalculateFocusQualityPercent(
+                events,
+                focus.FocusBlocks,
+                trackedElapsed,
+                focus.InterruptionCount,
+                metricsNow);
+
+            session.FocusStability = _metricsService.CalculateFocusStabilityPercent(
+                events,
+                trackedElapsed,
+                metricsNow);
+
+            session.ConcentrationScore = _metricsService.CalculateConcentrationScore(
+                events,
+                focus.FocusBlocks,
+                trackedElapsed,
+                focus.InterruptionCount,
+                metricsNow);
+
+            session.TrackedSeconds = trackedElapsed.TotalSeconds;
+            session.Interruptions = focus.InterruptionCount;
+            session.BestFocusBlockSeconds = focus.BestFocusBlockDuration.TotalSeconds;
+            session.TotalSwitches = CountTransitions(rows);
+            session.DisruptiveSwitches = CountDisruptiveSwitches(rows);
         }
 
         private List<ActivityAggregateRow> LoadActivityRows(SQLiteConnection connection, string sessionId)
@@ -305,55 +358,6 @@ namespace ConcentrationTracker.Core.Services
                     count++;
             }
             return count;
-        }
-
-        private double GetBestFocusBlockSeconds(List<ActivityAggregateRow> rows)
-        {
-            double best = 0;
-            double current = 0;
-
-            foreach (ActivityAggregateRow row in rows)
-            {
-                bool isFocus = IsCategory(row.CategoryName, AppCategory.Productive.ToString()) || IsCategory(row.CategoryName, AppCategory.Neutral.ToString());
-                if (isFocus)
-                {
-                    current += row.DurationSeconds;
-                    if (current > best)
-                        best = current;
-                }
-                else
-                {
-                    current = 0;
-                }
-            }
-
-            return best;
-        }
-
-        private int CalculatePercentage(double value, double total)
-        {
-            if (total <= 0)
-                return 0;
-            return ClampScore((int)Math.Round(value / total * 100));
-        }
-
-        private int CalculateConcentrationScore(int focusQuality, int focusStability, double distractionSeconds, double trackedSeconds)
-        {
-            int distractionPenalty = 0;
-            if (trackedSeconds > 0)
-                distractionPenalty = (int)Math.Round(distractionSeconds / trackedSeconds * 35);
-
-            int score = (int)Math.Round(focusQuality * 0.65 + focusStability * 0.35) - distractionPenalty;
-            return ClampScore(score);
-        }
-
-        private int ClampScore(int score)
-        {
-            if (score < 0)
-                return 0;
-            if (score > 100)
-                return 100;
-            return score;
         }
 
         private string GetTopApp(IEnumerable<ActivityAggregateRow> rows, string[] categoryFilter)

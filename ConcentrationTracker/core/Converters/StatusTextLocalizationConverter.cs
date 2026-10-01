@@ -105,6 +105,18 @@ namespace ConcentrationTracker.Core.Converters
                     "Details_BreakReasonAway");
             }
 
+            if (normalized == "distraction")
+            {
+                return LocalizationService.GetString(
+                    "Category_Distraction");
+            }
+
+            if (normalized == "communication")
+            {
+                return LocalizationService.GetString(
+                    "Category_Communication");
+            }
+
             if (normalized == "session ended" ||
                 normalized == "session end" ||
                 normalized == "saved session end")
