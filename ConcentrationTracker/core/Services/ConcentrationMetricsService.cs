@@ -12,9 +12,8 @@ namespace ConcentrationTracker.Core.Services
         private const double FocusStabilityWeight = 0.30;
 
         private const double NeutralFocusMultiplier = 0.55;
-        private const double CommunicationWeakFocusMultiplier = 0.45;
 
-        private const double WeakFocusRatioWeight = 35.0;
+        private const double CommunicationRatioWeight = 15.75;
         private const double HarmfulRatioWeight = 65.0;
 
         private const double InterruptionPenaltyPerEvent = 5.0;
@@ -151,17 +150,14 @@ namespace ConcentrationTracker.Core.Services
                 productiveSeconds +
                 neutralSeconds * NeutralFocusMultiplier;
 
-            double weakFocusSeconds =
-                communicationSeconds * CommunicationWeakFocusMultiplier;
-
             double harmfulSeconds =
                 distractionSeconds;
 
             double focusFriendlyRatio =
                 focusFriendlySeconds / trackedElapsed.TotalSeconds;
 
-            double weakFocusRatio =
-                weakFocusSeconds / trackedElapsed.TotalSeconds;
+            double communicationRatio =
+                communicationSeconds / trackedElapsed.TotalSeconds;
 
             double harmfulRatio =
                 harmfulSeconds / trackedElapsed.TotalSeconds;
@@ -181,7 +177,7 @@ namespace ConcentrationTracker.Core.Services
 
             double result =
                 focusFriendlyRatio * 100.0 +
-                weakFocusRatio * WeakFocusRatioWeight -
+                communicationRatio * CommunicationRatioWeight -
                 harmfulRatio * HarmfulRatioWeight -
                 interruptionPenalty -
                 shortActivityPenalty +
